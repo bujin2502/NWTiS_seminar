@@ -24,6 +24,3 @@
 
 # minted cache
 _minted-*/
-
-# PDF (komentiraj ovu liniju ako želiš commitati PDF)
-*.pdf

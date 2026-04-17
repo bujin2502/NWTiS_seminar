@@ -41,25 +41,39 @@
 \pagestyle{plain}
 
 \chapter{Uvod}
+Kratki opis teme, motivacija za odabir Apache POI-a te cilj i struktura rada.
 
-\begin{flushright}
-\textit{``We are drowning in information but starved for knowledge.''}~\cite{Naisbitt_1982}\\
--- John Naisbitt, Megatrends
-\end{flushright}
+\chapter{Pregled Apache POI projekta}
 
-\chapter{Povijest Chatbotova}
+\section{Povijest i razvoj}
+Od Jakarta POI projekta do današnjeg Apache POI-a.
 
-Popularnost chatbotova
+\section{Arhitektura i komponente}
+Pregled modula (HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF, XSLF) i razlika 
+između binarnih OLE2 i modernih OOXML implementacija.
 
-\section{Teorijske i matematičke pretpostavke}
+\chapter{Rad s formatima datoteka}
 
-Iako je Andre
+\section{Excel datoteke}
+Čitanje i pisanje .xls (HSSF) i .xlsx (XSSF) formata, formatiranje ćelija, 
+formule te SXSSF Streaming API za velike datoteke.
 
-\subsection{Markovljev lanac}
+\section{Word dokumenti}
+Rukovanje .doc (HWPF) i .docx (XWPF) formatima, paragrafi, tablice i stilovi.
 
-Al-Amin
+\section{PowerPoint prezentacije}
+Rukovanje .ppt (HSLF) i .pptx (XSLF) formatima, slajdovi i oblici.
+
+\chapter{Praktični primjeri}
+
+\section{Generiranje Excel izvještaja}
+Primjer automatskog generiranja tablice i grafa iz podataka.
+
+\section{Obrada Word dokumenta}
+Primjer čitanja i izmjene postojećeg .docx dokumenta.
 
 \chapter{Zaključak}
+Sažetak ključnih spoznaja i smjernice za primjenu Apache POI-a.
 
 \makebackmatter
 
