@@ -52,7 +52,12 @@ Cilj ovog rada je sustavno prikazati arhitekturu i ključne komponente Apache PO
 \chapter{Pregled Apache POI projekta}
 
 \section{Povijest i razvoj}
-Od Jakarta POI projekta do današnjeg Apache POI-a.
+
+Začeci Apache POI projekta sežu u travanj 2001. godine, kada je programer Andrew Oliver dobio kratkoročni ugovor za generiranje Excel izvještaja u Javi. Suočen s drastičnim porastom cijene komercijalne biblioteke koju je dotad koristio, Oliver je odlučio razviti vlastito rješenje otvorenog koda. Uz pomoć Marca Johnsona, kojeg je pronašao putem lokalne Java korisničke grupe, implementirana je podrška za OLE 2 \textit{Compound Document Format} kao temelj cijelog projekta. Johnson je preuzeo razvoj niskorazinskog sloja za rukovanje OLE2 strukturom, dok je Oliver paralelno radio na parsiranju XLS formata. Već s prvim izdanjem, POI 1.0, projekt je nadišao izvorne planove, uz podršku za čitanje i pisanje Excel datoteka, dodan je i serijalizacijski okvir za integraciju s drugim sustavima \cite{apacheApachePOIx2122}.
+
+Kako je projekt rastao, postalo je jasno da nadilazi okvire jednog namjenskog alata. Nakon neuspjelog pokušaja integracije isključivo u Apache Cocoon projekt, donesena je odluka da se jezgreni POI API-ji prenesu u okvir Apache Jakarta projekta, dok su pojedine komponente donirane drugim projektima iz Apache ekosustava. U sklopu Jakarte, projekt je nastavio rasti zahvaljujući doprinosima zajednice, proširujući podršku na nove formate i slučajeve korištenja. Početkom 2007. godine POI je završio proces inkubacije i postao samostalni projekt najviše razine unutar \textit{Apache Software Foundation} \cite{apacheApachePOIx2122}.
+
+Naziv projekta izvorno je bio akronim za "\textit{Poor Obfuscation Implementation}", humoristična referenca na činjenicu kako su Microsoftovi binarni formati, unatoč naizglednoj namjernoj kompliciranosti, bili uspješno reverzno razvijeni. Ista logika imenovanja proteže se i na potprojekte poput HSSF (\textit{Horrible SpreadSheet Format}), HWPF (\textit{Horrible Word Processor Format}) i ostale. Kako je projekt počeo privlačiti poslovne korisnike, objašnjenja akronima tiho su uklonjena s službenih stranica \cite{wikipediaApacheWikipedia}.
 
 \section{Arhitektura i komponente}
 Pregled modula (HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF, XSLF) i razlika 
