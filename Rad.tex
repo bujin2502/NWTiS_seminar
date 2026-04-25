@@ -53,15 +53,50 @@ Cilj ovog rada je sustavno prikazati arhitekturu i ključne komponente Apache PO
 
 \section{Povijest i razvoj}
 
-Začeci Apache POI projekta sežu u travanj 2001. godine, kada je programer Andrew Oliver dobio kratkoročni ugovor za generiranje Excel izvještaja u Javi. Suočen s drastičnim porastom cijene komercijalne biblioteke koju je dotad koristio, Oliver je odlučio razviti vlastito rješenje otvorenog koda. Uz pomoć Marca Johnsona, kojeg je pronašao putem lokalne Java korisničke grupe, implementirana je podrška za OLE 2 \textit{Compound Document Format} kao temelj cijelog projekta. Johnson je preuzeo razvoj niskorazinskog sloja za rukovanje OLE2 strukturom, dok je Oliver paralelno radio na parsiranju XLS formata. Već s prvim izdanjem, POI 1.0, projekt je nadišao izvorne planove, uz podršku za čitanje i pisanje Excel datoteka, dodan je i serijalizacijski okvir za integraciju s drugim sustavima \cite{apacheApachePOIx2122}.
+Začeci Apache POI projekta sežu u travanj 2001. godine, kada je programer Andrew Oliver dobio kratkoročni ugovor za generiranje Excel izvještaja u Javi. Suočen s drastičnim porastom cijene komercijalne biblioteke koju je dotad koristio, Oliver je odlučio razviti vlastito rješenje otvorenog koda. Uz pomoć Marca Johnsona, kojeg je pronašao putem lokalne Java korisničke grupe, implementirana je podrška za OLE 2 \textit{Compound Document Format} kao temelj cijelog projekta. Johnson je preuzeo razvoj niskorazinskog sloja za rukovanje OLE2 strukturom, dok je Oliver paralelno radio na parsiranju XLS formata. Već s prvim izdanjem, POI 1.0, projekt je nadišao izvorne planove, uz podršku za čitanje i pisanje Excel datoteka, dodan je i serijalizacijski okvir za integraciju s drugim sustavima \cite{apacheApachePOIHistory}.
 
-Kako je projekt rastao, postalo je jasno da nadilazi okvire jednog namjenskog alata. Nakon neuspjelog pokušaja integracije isključivo u Apache Cocoon projekt, donesena je odluka da se jezgreni POI API-ji prenesu u okvir Apache Jakarta projekta, dok su pojedine komponente donirane drugim projektima iz Apache ekosustava. U sklopu Jakarte, projekt je nastavio rasti zahvaljujući doprinosima zajednice, proširujući podršku na nove formate i slučajeve korištenja. Početkom 2007. godine POI je završio proces inkubacije i postao samostalni projekt najviše razine unutar \textit{Apache Software Foundation} \cite{apacheApachePOIx2122}.
+Kako je projekt rastao, postalo je jasno da nadilazi okvire jednog namjenskog alata. Nakon neuspjelog pokušaja integracije isključivo u Apache Cocoon projekt, donesena je odluka da se jezgreni POI API-ji prenesu u okvir Apache Jakarta projekta, dok su pojedine komponente donirane drugim projektima iz Apache ekosustava. U sklopu Jakarte, projekt je nastavio rasti zahvaljujući doprinosima zajednice, proširujući podršku na nove formate i slučajeve korištenja. Početkom 2007. godine POI je završio proces inkubacije i postao samostalni projekt najviše razine unutar \textit{Apache Software Foundation} \cite{apacheApachePOIHistory}.
 
 Naziv projekta izvorno je bio akronim za "\textit{Poor Obfuscation Implementation}", humoristična referenca na činjenicu kako su Microsoftovi binarni formati, unatoč naizglednoj namjernoj kompliciranosti, bili uspješno reverzno razvijeni. Ista logika imenovanja proteže se i na potprojekte poput HSSF (\textit{Horrible SpreadSheet Format}), HWPF (\textit{Horrible Word Processor Format}) i ostale. Kako je projekt počeo privlačiti poslovne korisnike, objašnjenja akronima tiho su uklonjena s službenih stranica \cite{wikipediaApacheWikipedia}.
 
 \section{Arhitektura i komponente}
-Pregled modula (HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF, XSLF) i razlika 
-između binarnih OLE2 i modernih OOXML implementacija.
+
+Apache POI organiziran je kao skup zasebnih modula, pri čemu svaki pokriva određeni format datoteke ili sloj infrastrukture. Temeljna podjela prati dvije generacije Microsoft Office formata. Stariji binarni formati, poput XLS, DOC i PPT, temelje se na OLE2 (\textit{Object Linking and Embedding}) standardu, Microsoftovom formatu za složene dokumente koji datira iz ranih devedesetih. Za rukovanje ovim formatima POI koristi POIFS (\textit{Poor Obfuscation Implementation File System}) komponentu koja implementira OLE2 datotečni sustav u čistoj Javi. S druge strane, uvođenjem Microsoft Officea 2007 pojavio se Office Open XML (OOXML) standard, skup formata temeljenih na XML-u i pakiranih kao ZIP arhive, koji je kasnije standardiziran kao ISO/IEC 29500. Za rad s OOXML formatima POI interno koristi openxml4j biblioteku koja implementira Open Packaging Conventions, temeljnu specifikaciju tog standarda \cite{apacheApachePOIComponents}.
+
+Na ovoj infrastrukturi izgrađeni su moduli koji programerima nude intuitivan API za rad s Office dokumentima, apstrahirajući složenost internih binarnih i XML struktura. Za Excel datoteke postoje HSSF (za stariji .xls format) i XSSF (za .xlsx), objedinjeni zajedničkim SS sučeljem koje omogućuje pisanje koda neovisnog o konkretnom formatu. Uz njih, SXSSF pruža streaming implementaciju namijenjenu pisanju izrazito velikih xlsx datoteka uz minimalan utrošak memorije. Za Word dokumente analogno postoje HWPF (za .doc) i XWPF (za .docx), a za PowerPoint prezentacije HSLF (za .ppt) i XSLF (za .pptx). Projekt uključuje i module za manje zastupljene formate, HSMF za Outlook poruke, HDGF i XDGF za Visio dijagrame te HPBF za Publisher datoteke \cite{apacheApachePOIComponents}.
+
+\begin{table}[h]
+\centering
+\caption{Pregled Apache POI modula}
+\label{tab:poi-moduli}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Modul} & \textbf{Format} & \textbf{Ekstenzija} & \textbf{Standard} \\
+\hline
+POIFS & OLE2 datotečni sustav & — & OLE2 \\
+\hline
+HSSF & Excel (stari) & .xls & OLE2 \\
+\hline
+XSSF & Excel (novi) & .xlsx & OOXML \\
+\hline
+SXSSF & Excel (streaming) & .xlsx & OOXML \\
+\hline
+HWPF & Word (stari) & .doc & OLE2 \\
+\hline
+XWPF & Word (novi) & .docx & OOXML \\
+\hline
+HSLF & PowerPoint (stari) & .ppt & OLE2 \\
+\hline
+XSLF & PowerPoint (novi) & .pptx & OOXML \\
+\hline
+HSMF & Outlook poruke & .msg & OLE2 \\
+\hline
+HDGF/XDGF & Visio dijagrami & .vsd/.vsdx & OLE2/OOXML \\
+\hline
+HPBF & Publisher & .pub & OLE2 \\
+\hline
+\end{tabular}
+\end{table}
 
 \chapter{Rad s formatima datoteka}
 
