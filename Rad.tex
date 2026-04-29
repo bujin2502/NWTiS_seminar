@@ -100,15 +100,25 @@ HPBF & Publisher & .pub & OLE2 \\
 
 \chapter{Rad s formatima datoteka}
 
+Ovo poglavlje rada posvećeno je praktičnoj primjeni Apache POI biblioteke za rad s tri najzastupljenija Microsoft Office formata — Excel tablicama, Word dokumentima i PowerPoint prezentacijama. Za svaki format postoje dvije implementacije koje odgovaraju dvjema generacijama Office standarda: starija binarna implementacija temeljena na OLE2 formatu te novija implementacija temeljena na OOXML standardu. U nastavku su opisane ključne mogućnosti svake implementacije, uz osvrt na specifičnosti pojedinih slučajeva korištenja \cite{apacheApachePOIComponents}.
+
 \section{Excel datoteke}
-Čitanje i pisanje .xls (HSSF) i .xlsx (XSSF) formata, formatiranje ćelija, 
-formule te SXSSF Streaming API za velike datoteke.
+
+Za rad s Excel datotekama Apache POI nudi tri implementacije. HSSF (\textit{Horrible SpreadSheet Format}) pokriva stariji binarni .xls format koji odgovara Excel verzijama 97–2003, a XSSF (\textit{XML SpreadSheet Format}) namijenjen je modernom .xlsx formatu temeljenom na OOXML standardu. Oba modula podržavaju čitanje i pisanje, a dostupna je i zajednička SS apstrakcija koja omogućuje pisanje koda neovisnog o konkretnom formatu. Isti kod može generirati i .xls i .xlsx datoteku promjenom jednog parametra. Kroz ove module moguće je kreirati radne knjige i listove, postavljati vrijednosti ćelija, primjenjivati stilove i formate, koristiti formule te upravljati uvjetnim oblikovanjem \cite{apachePOIHSSFPOIXSSFSXSSF}.
+
+Za slučajeve kada je potrebno generirati izrazito velike Excel datoteke, standardni XSSF pristup može biti problematičan zbog visokog memorijskog opterećenja, cijela struktura dokumenta drži se u memoriji. Kao rješenje, od verzije 3.8-beta3 dostupan je SXSSF (\textit{Streaming SpreadSheet Format}), streaming implementacija izgrađena povrh XSSF-a. SXSSF postiže mali memorijski otisak ograničavanjem pristupa samo redovima unutar kliznog prozora fiksne veličine, dok se stariji redovi automatski zapisuju na disk. Veličina prozora može se konfigurirati pri inicijalizaciji radne knjige ili zasebno po listu. Važno je napomenuti kako je SXSSF namijenjen isključivo pisanju, za čitanje velikih datoteka preporučuje se korištenje SAX-temeljenog Event modela koji XML strukturu .xlsx datoteke procesira inkrementalno \cite{apachePOIHSSFPOIXSSFSXSSF}.
 
 \section{Word dokumenti}
-Rukovanje .doc (HWPF) i .docx (XWPF) formatima, paragrafi, tablice i stilovi.
+
+Za rad s Word dokumentima Apache POI nudi dvije implementacije. HWPF (\textit{Horrible Word Processor Format}) pokriva stariji binarni .doc format koji odgovara Word verzijama 97–2003, a XWPF (\textit{XML Word Processor Format}) namijenjen je modernom .docx formatu temeljenom na OOXML standardu. HWPF podržava čitanje i ograničeno pisanje, a pruža i jednostavnu ekstrakciju teksta za još starije Word 6 i Word 95 formate. XWPF nudi stabilniji i potpuniji API te podržava čitanje i pisanje složenijih dokumenata \cite{apacheApachePOIHWPFXWPF}.
+
+Glavna ulazna točka za rad s .docx datotekama je klasa XWPFDocument, iz koje se dohvaćaju svi elementi dokumenta. Paragrafi su dostupni kroz klasu XWPFParagraph, a svaki paragraf sastoji se od jednog ili više XWPFRun objekata koji predstavljaju tekstualne odsječke s jednakim stilskim svojstvima: fontom, veličinom, podebljavanjem, nakošenje slova i slično. Tablice se dohvaćaju kroz klasu XWPFTable, pri čemu su pojedini redovi i ćelije dostupni kroz XWPFTableRow i XWPFTableCell. Za ekstrakciju cjelokupnog teksta dokumenta u jednom koraku dostupna je klasa XWPFWordExtractor. Zaglavlja i podnožja dostupna su kroz XWPFHeader i XWPFFooter klase putem XWPFHeaderFooterPolicy objekta \cite{apacheApachePOIHWPFXWPF}.
 
 \section{PowerPoint prezentacije}
-Rukovanje .ppt (HSLF) i .pptx (XSLF) formatima, slajdovi i oblici.
+
+Za rad s PowerPoint prezentacijama Apache POI nudi dvije implementacije. HSLF (\textit{Horrible Slide Layout Format}) pokriva stariji binarni .ppt format koji odgovara PowerPoint verzijama 97–2003, a XSLF (\textit{XML Slide Layout Format}) namijenjen je modernom .pptx formatu temeljenom na OOXML standardu. Za razliku od Excel modula koji dijele zajednički SS API, HSLF i XSLF trenutno nemaju zajedničko sučelje, što znači da kod napisan za jedan format nije izravno prenosiv na drugi \cite{apachePOIHSLFQuick}.
+
+Glavna ulazna točka za rad s .pptx datotekama je klasa XMLSlideShow, dok je za stariji .ppt format to HSLFSlideShow. Prezentacija se sastoji od hijerarhijske strukture: prezentacija sadržava slajdove, svaki slajd sadržava oblike (shapes), a svaki oblik može sadržavati tekstualne okvire i odlomke. Slajdovi se kreiraju metodom createSlide(), pri čemu je moguće odabrati željeni predložak rasporeda (\textit{slide layout}) iz dostupnih rasporeda slide mastera. Oblici poput tekstualnih okvira, slika i tablica dodaju se metodama poput createTextBox() i addPicture(). Za naprednije slučajeve korištenja, XSLFSlide objekt implementira metodu draw() koja omogućuje iscrtavanje cijelog slajda na Java Graphics2D objekt, što je korisno za generiranje slika ili PDF-ova iz prezentacija \cite{apachePOIHSLFQuick}.
 
 \chapter{Praktični primjeri}
 
