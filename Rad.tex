@@ -5,6 +5,32 @@
 \DeclareUnicodeCharacter{2011}{-}
 \usepackage{lipsum}
 \usepackage{float}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{xml}{
+  language=XML,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  stringstyle=\color{orange},
+  commentstyle=\color{gray}\itshape,
+  breaklines=true,
+  frame=single,
+  captionpos=b,
+}
+
+\lstdefinestyle{java}{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{orange},
+  commentstyle=\color{gray}\itshape,
+  breaklines=true,
+  frame=single,
+  captionpos=b,
+  showstringspaces=false,
+}
 
 \vrstaRada{\seminar}
 
@@ -57,7 +83,7 @@ Začeci Apache POI projekta sežu u travanj 2001. godine, kada je programer Andr
 
 Kako je projekt rastao, postalo je jasno da nadilazi okvire jednog namjenskog alata. Nakon neuspjelog pokušaja integracije isključivo u Apache Cocoon projekt, donesena je odluka da se jezgreni POI API-ji prenesu u okvir Apache Jakarta projekta, dok su pojedine komponente donirane drugim projektima iz Apache ekosustava. U sklopu Jakarte, projekt je nastavio rasti zahvaljujući doprinosima zajednice, proširujući podršku na nove formate i slučajeve korištenja. Početkom 2007. godine POI je završio proces inkubacije i postao samostalni projekt najviše razine unutar \textit{Apache Software Foundation} \cite{apacheApachePOIHistory}.
 
-Naziv projekta izvorno je bio akronim za "\textit{Poor Obfuscation Implementation}", humoristična referenca na činjenicu kako su Microsoftovi binarni formati, unatoč naizglednoj namjernoj kompliciranosti, bili uspješno reverzno razvijeni. Ista logika imenovanja proteže se i na potprojekte poput HSSF (\textit{Horrible SpreadSheet Format}), HWPF (\textit{Horrible Word Processor Format}) i ostale. Kako je projekt počeo privlačiti poslovne korisnike, objašnjenja akronima tiho su uklonjena s službenih stranica \cite{wikipediaApacheWikipedia}.
+Naziv projekta izvorno je bio akronim za ``\textit{Poor Obfuscation Implementation}'', humoristična referenca na činjenicu kako su Microsoftovi binarni formati, unatoč naizglednoj namjernoj kompliciranosti, bili uspješno reverzno razvijeni. Ista logika imenovanja proteže se i na potprojekte poput HSSF (\textit{Horrible SpreadSheet Format}), HWPF (\textit{Horrible Word Processor Format}) i ostale. Kako je projekt počeo privlačiti poslovne korisnike, objašnjenja akronima tiho su uklonjena s službenih stranica \cite{wikipediaApacheWikipedia}.
 
 \section{Arhitektura i komponente}
 
@@ -69,32 +95,22 @@ Na ovoj infrastrukturi izgrađeni su moduli koji programerima nude intuitivan AP
 \centering
 \caption{Pregled Apache POI modula}
 \label{tab:poi-moduli}
-\begin{tabular}{|l|l|l|l|}
-\hline
+\begin{tabular}{llll}
+\toprule
 \textbf{Modul} & \textbf{Format} & \textbf{Ekstenzija} & \textbf{Standard} \\
-\hline
+\midrule
 POIFS & OLE2 datotečni sustav & — & OLE2 \\
-\hline
 HSSF & Excel (stari) & .xls & OLE2 \\
-\hline
 XSSF & Excel (novi) & .xlsx & OOXML \\
-\hline
 SXSSF & Excel (streaming) & .xlsx & OOXML \\
-\hline
 HWPF & Word (stari) & .doc & OLE2 \\
-\hline
 XWPF & Word (novi) & .docx & OOXML \\
-\hline
 HSLF & PowerPoint (stari) & .ppt & OLE2 \\
-\hline
 XSLF & PowerPoint (novi) & .pptx & OOXML \\
-\hline
 HSMF & Outlook poruke & .msg & OLE2 \\
-\hline
 HDGF/XDGF & Visio dijagrami & .vsd/.vsdx & OLE2/OOXML \\
-\hline
 HPBF & Publisher & .pub & OLE2 \\
-\hline
+\bottomrule
 \end{tabular}
 \end{table}
 
@@ -118,15 +134,40 @@ Glavna ulazna točka za rad s .docx datotekama je klasa XWPFDocument, iz koje se
 
 Za rad s PowerPoint prezentacijama Apache POI nudi dvije implementacije. HSLF (\textit{Horrible Slide Layout Format}) pokriva stariji binarni .ppt format koji odgovara PowerPoint verzijama 97–2003, a XSLF (\textit{XML Slide Layout Format}) namijenjen je modernom .pptx formatu temeljenom na OOXML standardu. Za razliku od Excel modula koji dijele zajednički SS API, HSLF i XSLF trenutno nemaju zajedničko sučelje, što znači da kod napisan za jedan format nije izravno prenosiv na drugi \cite{apachePOIHSLFQuick}.
 
-Glavna ulazna točka za rad s .pptx datotekama je klasa XMLSlideShow, dok je za stariji .ppt format to HSLFSlideShow. Prezentacija se sastoji od hijerarhijske strukture: prezentacija sadržava slajdove, svaki slajd sadržava oblike (shapes), a svaki oblik može sadržavati tekstualne okvire i odlomke. Slajdovi se kreiraju metodom createSlide(), pri čemu je moguće odabrati željeni predložak rasporeda (\textit{slide layout}) iz dostupnih rasporeda slide mastera. Oblici poput tekstualnih okvira, slika i tablica dodaju se metodama poput createTextBox() i addPicture(). Za naprednije slučajeve korištenja, XSLFSlide objekt implementira metodu draw() koja omogućuje iscrtavanje cijelog slajda na Java Graphics2D objekt, što je korisno za generiranje slika ili PDF-ova iz prezentacija \cite{apachePOIHSLFQuick}.
+Glavna ulazna točka za rad s .pptx datotekama je klasa XMLSlideShow, dok je za stariji .ppt format to HSLFSlideShow. Prezentacija se sastoji od hijerarhijske strukture: prezentacija sadržava slajdove, svaki slajd sadržava oblike (shapes), a svaki oblik može sadržavati tekstualne okvire i odlomke. Slajdovi se kreiraju metodom \texttt{createSlide()}, pri čemu je moguće odabrati željeni predložak rasporeda (\textit{slide layout}) iz dostupnih rasporeda slide mastera. Oblici poput tekstualnih okvira, slika i tablica dodaju se metodama poput \texttt{createTextBox()} i \texttt{addPicture()}. Za naprednije slučajeve korištenja, XSLFSlide objekt implementira metodu \texttt{draw()} koja omogućuje iscrtavanje cijelog slajda na Java Graphics2D objekt, što je korisno za generiranje slika ili PDF-ova iz prezentacija \cite{apachePOIHSLFQuick}. % chktex 36
 
 \chapter{Praktični primjeri}
+
+Za demonstraciju praktične primjene Apache POI biblioteke koristi se Eclipse IDE uz Maven kao alat za upravljanje ovisnostima. Maven omogućuje jednostavno upravljanje vanjskim bibliotekama kroz centralnu konfiguracijsku datoteku pom.xml, čime se izbjegava ručno preuzimanje i dodavanje JAR datoteka u classpath projekta \cite{apacheApachePOIdownload}.
+
+Nakon kreiranja novog Maven projekta u Eclipseu putem File → New → Maven Project, u datoteku pom.xml potrebno je dodati dvije ovisnosti. Ovisnost poi pokriva podršku za starije binarne formate te predstavlja jezgrenu biblioteku projekta, dok ovisnost poi-ooxml dodaje podršku za moderne OOXML formate. Maven automatski preuzima sve tranzitivne ovisnosti, pa nije potrebno ručno upravljati dodatnim JAR datotekama. Trenutno aktualna stabilna verzija Apache POI biblioteke je 5.5.1. \cite{apacheApachePOIdownload}
+
+\begin{lstlisting}[style=xml, caption={Ovisnosti u datoteci pom.xml}]
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>5.5.1</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>5.5.1</version>
+</dependency>
+\end{lstlisting}
 
 \section{Generiranje Excel izvještaja}
 Primjer automatskog generiranja tablice i grafa iz podataka.
 
+\begin{lstlisting}[style=java, caption={Generiranje Excel izvještaja}]
+% TODO: dodaj Java kod ovdje
+\end{lstlisting}
+
 \section{Obrada Word dokumenta}
 Primjer čitanja i izmjene postojećeg .docx dokumenta.
+
+\begin{lstlisting}[style=java, caption={Obrada Word dokumenta}]
+% TODO: dodaj Java kod ovdje
+\end{lstlisting}
 
 \chapter{Zaključak}
 Sažetak ključnih spoznaja i smjernice za primjenu Apache POI-a.
