@@ -1,4 +1,5 @@
-\documentclass[]{foi} 
+\documentclass[]{foi}
+% chktex-file 36
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[croatian]{babel}
@@ -8,6 +9,7 @@
 \usepackage{booktabs}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{microtype}
 
 \lstdefinestyle{xml}{
   language=XML,
@@ -30,7 +32,9 @@
   frame=single,
   captionpos=b,
   showstringspaces=false,
+  literate={0}{{0}}{1} {1}{{1}}{1} {2}{{2}}{1} {3}{{3}}{1} {4}{{4}}{1} {5}{{5}}{1} {6}{{6}}{1} {7}{{7}}{1} {8}{{8}}{1} {9}{{9}}{1},
 }
+\lstset{float=H, floatplacement=H}
 
 \vrstaRada{\seminar}
 
@@ -155,17 +159,123 @@ Nakon kreiranja novog Maven projekta u Eclipseu putem File → New → Maven Pro
 </dependency>
 \end{lstlisting}
 
+\section{Kreiranje Word dokumenta}
+
+Kreiranje Word dokumenta u Apache POI-u temelji se na klasi \texttt{XWPFDocument}, 
+koja predstavlja glavni objekt dokumenta. Iz nje se kreiraju svi ostali elementi — 
+zaglavlja, podnožja, paragrafi i tablice.
+
+\subsection{Zaglavlje i podnožje}
+
+Zaglavlje i podnožje kreiraju se metodama \texttt{createHeader()} i 
+\texttt{createFooter()} uz parametar \texttt{HeaderFooterType.DEFAULT}, koji označava 
+da se primjenjuju na sve stranice dokumenta. Unutar zaglavlja i podnožja kreira se 
+paragraf, a tekst se dodaje kroz \texttt{XWPFRun} objekt. Isti princip — paragraf 
+koji sadrži jedan ili više \texttt{XWPFRun} objekata — koristi se za sve tekstualne 
+elemente u dokumentu.
+
+\begin{lstlisting}[style=java, caption={Obrada Word dokumenta}]
+XWPFHeader zaglavlje = dokument.createHeader(HeaderFooterType.DEFAULT);
+XWPFParagraph zaglavljeParagraf = zaglavlje.createParagraph();
+zaglavljeParagraf.setAlignment(ParagraphAlignment.CENTER);
+XWPFRun zaglavljeRun = zaglavljeParagraf.createRun();
+zaglavljeRun.setText("Fakultet organizacije i informatike");
+zaglavljeRun.setFontSize(10);
+zaglavljeRun.setColor("888888");
+\end{lstlisting}
+
+\subsection{Paragrafi i stilovi}
+
+{\sloppy
+Paragrafi se kreiraju metodom \texttt{createParagraph()} na objektu dokumenta.
+Svaki paragraf može imati postavljeno poravnanje (\texttt{setAlignment()}), razmak
+prije ili nakon (\texttt{setSpacingBefore()}, \texttt{setSpacingAfter()}) te jedan
+ili više \texttt{XWPFRun} objekata koji nose stvarni tekst. Na razini \texttt{XWPFRun}
+objekta definiraju se stilska svojstva teksta: font (\texttt{setFontFamily()}),
+veličina (\texttt{setFontSize()}), boja (\texttt{setColor()}), podebljanje
+(\texttt{setBold()}) i kurziv (\texttt{setItalic()}). U primjeru su na ovaj način
+kreirani naslov, podnaslov, uvodni paragraf i završna napomena.
+\par}
+
+\begin{lstlisting}[style=Java, caption={Kreiranje naslova}]
+XWPFParagraph naslov = dokument.createParagraph();
+naslov.setAlignment(ParagraphAlignment.CENTER);
+naslov.setSpacingAfter(200);
+XWPFRun naslovRun = naslov.createRun();
+naslovRun.setText("Popis studenata i ocjena");
+naslovRun.setBold(true);
+naslovRun.setFontSize(20);
+naslovRun.setFontFamily("Calibri");
+\end{lstlisting}
+
+\subsection{Tablica}
+
+Tablica se kreira metodom \texttt{createTable()} uz navođenje broja redova i stupaca. 
+U primjeru je kreirana tablica s 6 redova i 3 stupca — prvi red služi kao zaglavlje 
+tablice, a preostalih 5 redova sadrži podatke o studentima.
+
+Zaglavlje tablice stilizira se plavom pozadinskom bojom (\texttt{setColor()}) i 
+bijelim podebljanim tekstom. Svaka ćelija zaglavlja dohvaća se metodom 
+\texttt{getCell()} iz odgovarajućeg reda, a tekst se dodaje na isti način kao i u 
+paragrafima dokumenta — kroz \texttt{XWPFParagraph} i \texttt{XWPFRun} objekte.
+
+\begin{lstlisting}[style=Java, caption=Kreiranje zaglavlja tablice]
+XWPFTable tablica = dokument.createTable(6, 3);
+tablica.setWidth("100%");
+
+String[] zaglavljaStupaca = {"Ime i prezime", "JMBAG", "Ocjena"};
+XWPFTableRow zaglavljeRed = tablica.getRow(0);
+for (int i = 0; i < zaglavljaStupaca.length; i++) {
+    XWPFTableCell celija = zaglavljeRed.getCell(i);
+    celija.setColor("2E75B6");
+    XWPFParagraph p = celija.getParagraphs().get(0);
+    p.setAlignment(ParagraphAlignment.CENTER);
+    XWPFRun r = p.createRun();
+    r.setText(zaglavljaStupaca[i]);
+    r.setBold(true);
+    r.setColor("FFFFFF");
+    r.setFontSize(11);
+}
+\end{lstlisting}
+
+Redovi s podacima pune se iteracijom kroz dvodimenzionalno polje. Radi bolje 
+čitljivosti, primijenjeno je izmjenično bojanje redova — parni redovi ostaju bijeli, 
+a neparni dobivaju svijetloplavu pozadinsku boju.
+
+\begin{lstlisting}[style=Java, caption=Punjenje tablice podacima]
+for (int i = 0; i < podaci.length; i++) {
+    XWPFTableRow red = tablica.getRow(i + 1);
+    String boja = (i % 2 == 0) ? "FFFFFF" : "DEEAF1";
+    for (int j = 0; j < podaci[i].length; j++) {
+        XWPFTableCell celija = red.getCell(j);
+        celija.setColor(boja);
+        XWPFParagraph p = celija.getParagraphs().get(0);
+        p.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun r = p.createRun();
+        r.setText(podaci[i][j]);
+        r.setFontSize(11);
+    }
+}
+\end{lstlisting}
+
+\subsection{Spremanje dokumenta}
+
+Po završetku izgradnje dokumenta, korištenjem 
+\texttt{FileOutputStream} sadržaj se zapisuje u datoteku objekta. Preporučuje se korištenje \texttt{try-with-resources} 
+bloka koji osigurava automatsko zatvaranje toka podataka nakon zapisivanja, čime se 
+sprječava curenje resursa.
+
+\begin{lstlisting}[style=Java, caption=Spremanje dokumenta]
+try (FileOutputStream out = new FileOutputStream("studenti.docx")) {
+    dokument.write(out);
+}
+dokument.close();
+\end{lstlisting}
+
 \section{Generiranje Excel izvještaja}
 Primjer automatskog generiranja tablice i grafa iz podataka.
 
 \begin{lstlisting}[style=java, caption={Generiranje Excel izvještaja}]
-% TODO: dodaj Java kod ovdje
-\end{lstlisting}
-
-\section{Obrada Word dokumenta}
-Primjer čitanja i izmjene postojećeg .docx dokumenta.
-
-\begin{lstlisting}[style=java, caption={Obrada Word dokumenta}]
 % TODO: dodaj Java kod ovdje
 \end{lstlisting}
 
