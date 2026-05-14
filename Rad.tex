@@ -163,7 +163,7 @@ Nakon kreiranja novog Maven projekta u Eclipseu putem File → New → Maven Pro
 
 Kreiranje Word dokumenta u Apache POI-u temelji se na klasi \texttt{XWPFDocument}, 
 koja predstavlja glavni objekt dokumenta. Iz nje se kreiraju svi ostali elementi — 
-zaglavlja, podnožja, paragrafi i tablice.
+zaglavlja, podnožja, paragrafi i tablice \cite{apacheXWPFQuickGuide}.
 
 \subsection{Zaglavlje i podnožje}
 
@@ -172,7 +172,7 @@ Zaglavlje i podnožje kreiraju se metodama \texttt{createHeader()} i
 da se primjenjuju na sve stranice dokumenta. Unutar zaglavlja i podnožja kreira se 
 paragraf, a tekst se dodaje kroz \texttt{XWPFRun} objekt. Isti princip — paragraf 
 koji sadrži jedan ili više \texttt{XWPFRun} objekata — koristi se za sve tekstualne 
-elemente u dokumentu.
+elemente u dokumentu \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=java, caption={Obrada Word dokumenta}]
 XWPFHeader zaglavlje = dokument.createHeader(HeaderFooterType.DEFAULT);
@@ -194,7 +194,7 @@ ili više \texttt{XWPFRun} objekata koji nose stvarni tekst. Na razini \texttt{X
 objekta definiraju se stilska svojstva teksta: font (\texttt{setFontFamily()}),
 veličina (\texttt{setFontSize()}), boja (\texttt{setColor()}), podebljanje
 (\texttt{setBold()}) i kurziv (\texttt{setItalic()}). U primjeru su na ovaj način
-kreirani naslov, podnaslov, uvodni paragraf i završna napomena.
+kreirani naslov, podnaslov, uvodni paragraf i završna napomena \cite{apacheXWPFQuickGuide}.
 \par}
 
 \begin{lstlisting}[style=Java, caption={Kreiranje naslova}]
@@ -212,12 +212,12 @@ naslovRun.setFontFamily("Calibri");
 
 Tablica se kreira metodom \texttt{createTable()} uz navođenje broja redova i stupaca. 
 U primjeru je kreirana tablica s 6 redova i 3 stupca — prvi red služi kao zaglavlje 
-tablice, a preostalih 5 redova sadrži podatke o studentima.
+tablice, a preostalih 5 redova sadrži podatke o studentima \cite{apacheXWPFQuickGuide}.
 
 Zaglavlje tablice stilizira se plavom pozadinskom bojom (\texttt{setColor()}) i 
 bijelim podebljanim tekstom. Svaka ćelija zaglavlja dohvaća se metodom 
 \texttt{getCell()} iz odgovarajućeg reda, a tekst se dodaje na isti način kao i u 
-paragrafima dokumenta — kroz \texttt{XWPFParagraph} i \texttt{XWPFRun} objekte.
+paragrafima dokumenta — kroz \texttt{XWPFParagraph} i \texttt{XWPFRun} objekte \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=Java, caption=Kreiranje zaglavlja tablice]
 XWPFTable tablica = dokument.createTable(6, 3);
@@ -240,7 +240,7 @@ for (int i = 0; i < zaglavljaStupaca.length; i++) {
 
 Redovi s podacima pune se iteracijom kroz dvodimenzionalno polje. Radi bolje 
 čitljivosti, primijenjeno je izmjenično bojanje redova — parni redovi ostaju bijeli, 
-a neparni dobivaju svijetloplavu pozadinsku boju.
+a neparni dobivaju svijetloplavu pozadinsku boju \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=Java, caption=Punjenje tablice podacima]
 for (int i = 0; i < podaci.length; i++) {
@@ -263,7 +263,7 @@ for (int i = 0; i < podaci.length; i++) {
 Po završetku izgradnje dokumenta, korištenjem 
 \texttt{FileOutputStream} sadržaj se zapisuje u datoteku objekta. Preporučuje se korištenje \texttt{try-with-resources} 
 bloka koji osigurava automatsko zatvaranje toka podataka nakon zapisivanja, čime se 
-sprječava curenje resursa.
+sprječava curenje resursa \cite{apacheXWPFOverview}.
 
 \begin{lstlisting}[style=Java, caption=Spremanje dokumenta]
 try (FileOutputStream out = new FileOutputStream("studenti.docx")) {
