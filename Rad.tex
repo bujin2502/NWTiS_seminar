@@ -18,7 +18,7 @@
   stringstyle=\color{orange},
   commentstyle=\color{gray}\itshape,
   breaklines=true,
-  frame=single,
+  frame=box,
   captionpos=b,
 }
 
@@ -29,12 +29,17 @@
   stringstyle=\color{orange},
   commentstyle=\color{gray}\itshape,
   breaklines=true,
-  frame=single,
+  frame=box,
   captionpos=b,
   showstringspaces=false,
-  literate={0}{{0}}{1} {1}{{1}}{1} {2}{{2}}{1} {3}{{3}}{1} {4}{{4}}{1} {5}{{5}}{1} {6}{{6}}{1} {7}{{7}}{1} {8}{{8}}{1} {9}{{9}}{1},
+  numbers=left,
+  literate={0}{{0}}{1} {1}{{1}}{1} {2}{{2}}{1} {3}{{3}}{1} 
+           {4}{{4}}{1} {5}{{5}}{1} {6}{{6}}{1} {7}{{7}}{1} 
+           {8}{{8}}{1} {9}{{9}}{1},
+  breakatwhitespace=false,
+  frameround=ffff,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
-\lstset{float=H, floatplacement=H}
 
 \vrstaRada{\seminar}
 
