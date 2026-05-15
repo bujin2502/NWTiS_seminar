@@ -1,5 +1,4 @@
 \documentclass[]{foi}
-% chktex-file 36
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[croatian]{babel}
@@ -10,6 +9,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{microtype}
+\usepackage{mdframed}
 
 \lstdefinestyle{xml}{
   language=XML,
@@ -41,6 +41,13 @@
   postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
 
+\lstdefinestyle{csv}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=box,
+  captionpos=b,
+}
+
 \vrstaRada{\seminar}
 
 \title{API za rad s različitim formatima datoteka Apache POI}
@@ -67,6 +74,9 @@
 \kljucneRijeci{riječ; riječ; riječ; Obuhvaća $7\pm2$ ključna pojma koji su glavni predmet rasprave u radu.}
 
 \begin{document}
+
+\renewcommand{\lstlistlistingname}{Popis isječaka koda}
+\renewcommand{\lstlistingname}{Isječak koda}
 
 \maketitle
 
@@ -96,11 +106,13 @@ Naziv projekta izvorno je bio akronim za ``\textit{Poor Obfuscation Implementati
 
 \section{Arhitektura i komponente}
 
-Apache POI organiziran je kao skup zasebnih modula, pri čemu svaki pokriva određeni format datoteke ili sloj infrastrukture. Temeljna podjela prati dvije generacije Microsoft Office formata. Stariji binarni formati, poput XLS, DOC i PPT, temelje se na OLE2 (\textit{Object Linking and Embedding}) standardu, Microsoftovom formatu za složene dokumente koji datira iz ranih devedesetih. Za rukovanje ovim formatima POI koristi POIFS (\textit{Poor Obfuscation Implementation File System}) komponentu koja implementira OLE2 datotečni sustav u čistoj Javi. S druge strane, uvođenjem Microsoft Officea 2007 pojavio se Office Open XML (OOXML) standard, skup formata temeljenih na XML-u i pakiranih kao ZIP arhive, koji je kasnije standardiziran kao ISO/IEC 29500. Za rad s OOXML formatima POI interno koristi openxml4j biblioteku koja implementira Open Packaging Conventions, temeljnu specifikaciju tog standarda \cite{apacheApachePOIComponents}.
+Na ovoj infrastrukturi izgrađeni su moduli koji programerima nude intuitivan API 
+za rad s Office dokumentima, apstrahirajući složenost internih binarnih i XML 
+struktura. Pregled svih modula, njihovih formata i standarda prikazan je u 
+Tablici~\ref{tab:poi-moduli}, a detaljniji pregled ključnih klasa po kategorijama 
+dan je u nastavku \cite{apacheApachePOIComponents}.
 
-Na ovoj infrastrukturi izgrađeni su moduli koji programerima nude intuitivan API za rad s Office dokumentima, apstrahirajući složenost internih binarnih i XML struktura. Za Excel datoteke postoje HSSF (za stariji .xls format) i XSSF (za .xlsx), objedinjeni zajedničkim SS sučeljem koje omogućuje pisanje koda neovisnog o konkretnom formatu. Uz njih, SXSSF pruža streaming implementaciju namijenjenu pisanju izrazito velikih xlsx datoteka uz minimalan utrošak memorije. Za Word dokumente analogno postoje HWPF (za .doc) i XWPF (za .docx), a za PowerPoint prezentacije HSLF (za .ppt) i XSLF (za .pptx). Projekt uključuje i module za manje zastupljene formate, HSMF za Outlook poruke, HDGF i XDGF za Visio dijagrame te HPBF za Publisher datoteke \cite{apacheApachePOIComponents}.
-
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Pregled Apache POI modula}
 \label{tab:poi-moduli}
@@ -122,6 +134,30 @@ HPBF & Publisher & .pub & OLE2 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{Pregled dostupnih klasa}
+
+Apache POI biblioteka pruža iznimno bogat skup klasa koje pokrivaju gotovo sve 
+aspekte rada s Office dokumentima. Za Excel datoteke, klase poput 
+\texttt{XSSFWorkbook}, \texttt{XSSFSheet}, \texttt{XSSFCell} i 
+\texttt{XSSFCellStyle} omogućuju kreiranje i formatiranje tablica, dok 
+\texttt{XSSFChart} i \texttt{XDDFChartData} podržavaju generiranje grafova. Za 
+streaming obradu velikih datoteka dostupne su \texttt{SXSSFWorkbook} i 
+\texttt{SXSSFSheet}. Word dokumenti pokriveni su klasama \texttt{XWPFDocument}, 
+\texttt{XWPFParagraph}, \texttt{XWPFRun}, \texttt{XWPFTable} i 
+\texttt{XWPFHeaderFooter}, a za PowerPoint prezentacije koriste se 
+\texttt{XMLSlideShow}, \texttt{XSLFSlide}, \texttt{XSLFTextShape} i 
+\texttt{XSLFTable} \cite{apachePOIJavadoc}.
+
+Uz rad s dokumentima, biblioteka nudi i infrastrukturne komponente. 
+\texttt{POIFSFileSystem} i \texttt{OPCPackage} upravljaju niskorazinskim pristupom 
+OLE2 i OOXML datotečnim strukturama. Klase iz paketa \texttt{EncryptionInfo}, 
+\texttt{Encryptor} i \texttt{Decryptor} omogućuju enkripciju i dekripciju 
+dokumenata. Za ekstrakciju teksta dostupne su \texttt{XWPFWordExtractor}, 
+\texttt{ExcelExtractor} i \texttt{SlideShowExtractor}, a \texttt{DataFormatter} i 
+\texttt{DateUtil} pomažu pri interpretaciji formata ćelija. Klase poput 
+\texttt{EmbeddedExtractor} i \texttt{PictureData} omogućuju ekstrakciju ugrađenih 
+slika i objekata iz dokumenata \cite{apachePOIJavadoc}.
 
 \chapter{Rad s formatima datoteka}
 
@@ -279,7 +315,36 @@ dokument.close();
 
 \subsection{Izrada cirkularnog dokumenta}
 
-Ovdje ide sadržaj o izradi cirkularnog dokumenta, gdje se koristi predložak s rezerviranim mjestima (placeholderima) koji se zamjenjuju stvarnim podacima. Primjer koda koji učitava predložak, pronalazi i zamjenjuje placeholdere te generira personalizirane dokumente za svakog studenta.
+Na ovom mjestu će se opisati ideja igradnje cirkularnog pisam uz pomoć \texttt{XWPFDocument} klase. Cirkularno pismo je tehnika masovne personalizacije
+dokumenta. Prije nego što se uopće krene s implementacijom, potrebno je kreirati predložak dokumenta koji sadrži rezervirana mjesta (placeholdere) za dinamičke podatke. U konkretnom primjeru, u Word dokumentu se koriste oznake \texttt{\{\{IME\}\}}, \texttt{\{\{PREZIME\}\}}, \texttt{\{\{JMBAG\}\}}, \texttt{\{\{KOLEGIJ\}\}},\texttt{\{\{DATUM\}\}}  i \texttt{\{\{OCJENA\}\}} koje će se kasnije zamijeniti stvarnim vrijednostima iz CSV datoteke kao izvora podataka. Ove oznake su lako prepoznatljive i ne sadrže razmake, što olakšava njihovu identifikaciju u kodu.
+
+Predložak bi izgledao na sljedeći način:
+
+\begin{mdframed}
+Poštovani/a \texttt{\{\{IME\}\}} \texttt{\{\{PREZIME\}\}},
+
+obavještavamo Vas kako ste na kolegiju \texttt{\{\{KOLEGIJ\}\}} ostvarili ocjenu \texttt{\{\{OCJENA\}\}}.
+
+JMBAG: \texttt{\{\{JMBAG\}\}}
+
+Datum: \texttt{\{\{DATUM\}\}}
+
+S poštovanjem,\\
+Fakultet organizacije i informatike
+\end{mdframed}
+
+Za potrebu popune navedenog predloška, koristi se CSV datoteka koja sadrži podatke o studentima i njihovim ocjenama. Ova datoteka služi kao izvor podataka za zamjenu rezerviranih mjesta u predlošku, omogućujući generiranje personaliziranih dokumenata za svakog studenta.
+
+\begin{lstlisting}[style=csv, caption={Datoteka studenti.csv}]
+ime,prezime,jmbag,kolegij,datum,ocjena
+Pero,Kos,0123456789,Napredne WEB tehnologije i servisi,20.05.2026,(5)
+Franjo,Kovac,0123456790,Napredne WEB tehnologije i servisi,20.05.2026,(4)
+Maja,Peric,0123456791,Napredne WEB tehnologije i servisi,20.05.2026,(5)
+Luka,Novak,0123456792,Napredne WEB tehnologije i servisi,20.05.2026,(3)
+Sara,Babic,0123456793,Napredne WEB tehnologije i servisi,20.05.2026,(4)
+\end{lstlisting}
+
+U Prilogu \ref{section:cirkularno-pismo} nalazi se Java kod koji demonstrira kako se koristi Apache POI za čitanje predloška, zamjenu rezerviranih mjesta s podacima iz CSV datoteke i generiranje personaliziranih Word dokumenata za svakog studenta. Ovaj primjer ilustrira praktičnu primjenu Apache POI biblioteke u kontekstu masovne personalizacije dokumenata, što je česta potreba u obrazovnim institucijama i poslovnim okruženjima.
 
 \section{Generiranje Excel izvještaja}
 Primjer automatskog generiranja tablice i grafa iz podataka.
@@ -291,10 +356,33 @@ Primjer automatskog generiranja tablice i grafa iz podataka.
 \chapter{Zaključak}
 Sažetak ključnih spoznaja i smjernice za primjenu Apache POI-a.
 
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\lstlistlistingname}
+
+% Izravno redefiniramo naredbu koja ispisuje naslov u samom trenutku poziva
+\makeatletter
+\renewcommand{\lstlistoflistings}{%
+  \chapter*{\lstlistlistingname}% Postavlja naslov koji želimo
+  \@starttoc{lol}% Poziva ispis liste isječaka koda
+}
+\makeatother
+
+\lstlistoflistings
+
 \makebackmatter
 
 \appendices
 
-\chapter{Prilog 1}
+\chapter{Prilog}
+\section{Cirkularno pismo}
+\label{section:cirkularno-pismo}
+
+\begin{lstlisting}[style=Java, caption=Cirkularno pismo]
+try (FileOutputStream out = new FileOutputStream("studenti.docx")) {
+    dokument.write(out);
+}
+dokument.close();
+\end{lstlisting}
 
 \end{document}
