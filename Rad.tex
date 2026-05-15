@@ -101,7 +101,7 @@ Cilj ovog rada je sustavno prikazati arhitekturu i ključne komponente Apache PO
 
 Začeci Apache POI projekta sežu u travanj 2001. godine, kada je programer Andrew Oliver dobio kratkoročni ugovor za generiranje Excel izvještaja u Javi. Suočen s drastičnim porastom cijene komercijalne biblioteke koju je dotad koristio, Oliver je odlučio razviti vlastito rješenje otvorenog koda. Uz pomoć Marca Johnsona, kojeg je pronašao putem lokalne Java korisničke grupe, implementirana je podrška za OLE 2 \textit{Compound Document Format} kao temelj cijelog projekta. Johnson je preuzeo razvoj niskorazinskog sloja za rukovanje OLE2 strukturom, dok je Oliver paralelno radio na parsiranju XLS formata. Već s prvim izdanjem, POI 1.0, projekt je nadišao izvorne planove, uz podršku za čitanje i pisanje Excel datoteka, dodan je i serijalizacijski okvir za integraciju s drugim sustavima \cite{apacheApachePOIHistory}.
 
-Kako je projekt rastao, postalo je jasno da nadilazi okvire jednog namjenskog alata. Nakon neuspjelog pokušaja integracije isključivo u Apache Cocoon projekt, donesena je odluka da se jezgreni POI API-ji prenesu u okvir Apache Jakarta projekta, dok su pojedine komponente donirane drugim projektima iz Apache ekosustava. U sklopu Jakarte, projekt je nastavio rasti zahvaljujući doprinosima zajednice, proširujući podršku na nove formate i slučajeve korištenja. Početkom 2007. godine POI je završio proces inkubacije i postao samostalni projekt najviše razine unutar \textit{Apache Software Foundation} \cite{apacheApachePOIHistory}.
+Kako je projekt rastao, postalo je jasno da nadilazi okvire jednog namjenskog alata. Nakon neuspjelog pokušaja integracije isključivo u Apache Cocoon projekt, donesena je odluka da se jezgreni POI API-ji prenesu u okvir Apache Jakarta projekta, dok su pojedine komponente donirane drugim projektima iz Apache ekosustava. U sklopu Jakarte, projekt je nastavio rasti zahvaljujući doprinosima zajednice, proširujući podršku na nove formate i slučajeve korištenja. Početkom 2007. godine POI je zaprovodio proces inkubacije i postao samostalni projekt najviše razine unutar \textit{Apache Software Foundation} \cite{apacheApachePOIHistory}.
 
 Naziv projekta izvorno je bio akronim za ``\textit{Poor Obfuscation Implementation}'', humoristična referenca na činjenicu kako su Microsoftovi binarni formati, unatoč naizglednoj namjernoj kompliciranosti, bili uspješno reverzno razvijeni. Ista logika imenovanja proteže se i na potprojekte poput HSSF (\textit{Horrible SpreadSheet Format}), HWPF (\textit{Horrible Word Processor Format}) i ostale. Kako je projekt počeo privlačiti poslovne korisnike, objašnjenja akronima tiho su uklonjena s službenih stranica \cite{wikipediaApacheWikipedia}.
 
@@ -367,6 +367,14 @@ Sara,Babić,0123456793,Napredne WEB tehnologije i servisi,Vrlo dobar (4)
 
 U Prilogu se nalazi Java kod koji demonstrira kako se koristi Apache POI za čitanje predloška, zamjenu rezerviranih mjesta s podacima iz CSV datoteke i generiranje personaliziranih Word dokumenata za svakog studenta. Ovaj primjer ilustrira praktičnu primjenu Apache POI biblioteke u kontekstu masovne personalizacije dokumenata, što je česta potreba u obrazovnim institucijama i poslovnim okruženjima.
 
+Program se sastoji od dvije metode: \texttt{main()} koja upravlja ukupnim tokom izvođenja i pomoćne metode \texttt{zamijeniUParagrafu()} koja provodi zamjenu placeholdera unutar pojedinog paragrafa.
+
+U metodi \texttt{main()} najprije se definiraju putanje do predloška i CSV datoteke te se automatski generira trenutni datum korištenjem \texttt{LocalDate.now()}. CSV datoteka čita se redak po redak korištenjem \texttt{BufferedReader} klase, pri čemu se prvi redak (zaglavlje) preskače zastavicom \texttt{prviRed}. Svaki sljedeći redak dijeli se po zarezu metodom \texttt{split(",")}, a vrijednosti se pohranjuju u zasebne varijable. Za svakog studenta predložak se učitava kao novi \texttt{XWPFDocument} objekt kako bi svaki generirani dokument krenuo od čistog predloška. Po završetku 
+zamjene, dokument se sprema pod nazivom oblika \texttt{obavijest\_Ime\_Prezime.docx}.
+
+Metoda \texttt{zamijeniUParagrafu()} rješava specifičan problem XWPF implementacije — Word dokument interno može razbiti jedan vidljivi tekst u više \texttt{XWPFRun} objekata, zbog čega jednostavna zamjena po pojedinom odsječku ne bi mogla prepoznati cijeli placeholder. Metoda stoga najprije spaja 
+tekstove svih odsječaka paragrafa u jedan string korištenjem \texttt{StringBuilder} klase, zatim provodi zamjenu svih placeholdera, a konačni tekst upisuje u prvi odsječak dok ostale odsječke prazni. Na taj način stilska svojstva prvog odsječka ostaju sačuvana, a sadržaj je ispravno popunjen.
+
 \section{Generiranje Excel izvještaja}
 Primjer automatskog generiranja tablice i grafa iz podataka.
 
@@ -449,7 +457,7 @@ public class CirkularnoPismo {
                 }
             }
         }
-        System.out.println("Cirkularno pismo uspješno generirano.");
+        System.out.println("Cirkularno pismo uspjesno generirano.");
     }
 
     private static void zamijeniUParagrafu(XWPFParagraph paragraf,

@@ -9,6 +9,6 @@
 \contentsline {lstlisting}{\numberline {5}{\ignorespaces Punjenje tablice podacima}}{8}{lstlisting.5}%
 \contentsline {lstlisting}{\numberline {6}{\ignorespaces Spremanje dokumenta}}{8}{lstlisting.6}%
 \contentsline {lstlisting}{\numberline {7}{\ignorespaces Datoteka studenti.csv}}{10}{lstlisting.7}%
-\contentsline {lstlisting}{\numberline {8}{\ignorespaces Generiranje Excel izvještaja}}{10}{lstlisting.8}%
+\contentsline {lstlisting}{\numberline {8}{\ignorespaces Generiranje Excel izvještaja}}{11}{lstlisting.8}%
 \addvspace {10\p@ }
-\contentsline {lstlisting}{\numberline {9}{\ignorespaces Cirkularno pismo}}{17}{lstlisting.9}%
+\contentsline {lstlisting}{\numberline {9}{\ignorespaces Cirkularno pismo}}{18}{lstlisting.9}%
