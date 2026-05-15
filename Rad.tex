@@ -357,12 +357,12 @@ Fakultet organizacije i informatike
 Za potrebu popune navedenog predloška, koristi se CSV datoteka koja sadrži podatke o studentima i njihovim ocjenama. Ova datoteka služi kao izvor podataka za zamjenu rezerviranih mjesta u predlošku, omogućujući generiranje personaliziranih dokumenata za svakog studenta.
 
 \begin{lstlisting}[style=csv, caption={Datoteka studenti.csv}]
-ime,prezime,jmbag,kolegij,datum,ocjena
-Pero,Kos,0123456789,Napredne WEB tehnologije i servisi,20.05.2026,(5)
-Franjo,Kovac,0123456790,Napredne WEB tehnologije i servisi,20.05.2026,(4)
-Maja,Peric,0123456791,Napredne WEB tehnologije i servisi,20.05.2026,(5)
-Luka,Novak,0123456792,Napredne WEB tehnologije i servisi,20.05.2026,(3)
-Sara,Babic,0123456793,Napredne WEB tehnologije i servisi,20.05.2026,(4)
+ime,prezime,jmbag,kolegij,ocjena
+Pero,Kos,0123456789,Napredne WEB tehnologije i servisi,Izvrstan (5)
+Franjo,Kovač,0123456790,Napredne WEB tehnologije i servisi,Vrlo dobar (4)
+Maja,Perić,0123456791,Napredne WEB tehnologije i servisi,Izvrstan (5)
+Luka,Novak,0123456792,Napredne WEB tehnologije i servisi,Dobar (3)
+Sara,Babić,0123456793,Napredne WEB tehnologije i servisi,Vrlo dobar (4)
 \end{lstlisting}
 
 U Prilogu se nalazi Java kod koji demonstrira kako se koristi Apache POI za čitanje predloška, zamjenu rezerviranih mjesta s podacima iz CSV datoteke i generiranje personaliziranih Word dokumenata za svakog studenta. Ovaj primjer ilustrira praktičnu primjenu Apache POI biblioteke u kontekstu masovne personalizacije dokumenata, što je česta potreba u obrazovnim institucijama i poslovnim okruženjima.
