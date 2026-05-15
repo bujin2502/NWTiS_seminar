@@ -11,5 +11,4 @@
 \contentsline {lstlisting}{\numberline {7}{\ignorespaces Datoteka studenti.csv}}{9}{lstlisting.7}%
 \contentsline {lstlisting}{\numberline {8}{\ignorespaces Generiranje Excel izvještaja}}{9}{lstlisting.8}%
 \addvspace {10\p@ }
-\addvspace {10\p@ }
 \contentsline {lstlisting}{\numberline {9}{\ignorespaces Cirkularno pismo}}{15}{lstlisting.9}%
