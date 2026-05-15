@@ -10,6 +10,7 @@
 \usepackage{xcolor}
 \usepackage{microtype}
 \usepackage{mdframed}
+\usepackage{graphicx}
 
 \lstdefinestyle{xml}{
   language=XML,
@@ -312,6 +313,26 @@ try (FileOutputStream out = new FileOutputStream("studenti.docx")) {
 }
 dokument.close();
 \end{lstlisting}
+
+Na Slici~\ref{fig:word_kreiran_cista} prikazan je finalni izgled dokumenta u formatu \texttt{.docx} generiranog programskim putem. Vizualni prikaz potvrđuje uspješnu integraciju svih ključnih komponenti Apache POI API-ja o kojima je bilo riječi u prethodnim poglavljima. 
+
+U gornjem dijelu dokumenta vidljivo je zaglavlje (\textit{header}) s centriranim tekstom institucije, dok središnjim dijelom dominira naslov definiran povećanim fontom i podebljanim stilom (\textbf{bold}), čime se postiže jasna vizualna hijerarhija. Ispod naslova nalazi se tekstualni odlomak koji služi kao uvod u podatke.
+
+Središnji strukturni element dokumenta je tablica s podacima o studentima. Na slici se jasno razaznaje primjena stilova nad tablicom:
+\begin{itemize}
+    \item \textbf{Zaglavlje tablice} istaknuto je tamnijom bojom pozadine i bijelim tekstom radi bolje čitljivosti.
+    \item \textbf{Tijelo tablice} koristi tehniku izmjeničnog bojanja redova (tzv. \textit{zebra striping}), što olakšava praćenje podataka u redovima.
+    \item \textbf{Poravnanje sadržaja} unutar ćelija je uniformno, što demonstrira preciznu kontrolu nad \texttt{XWPFTableCell} objektima.
+\end{itemize}
+
+Konačno, na dnu stranice nalazi se završna napomena, a cijeli dokument zadržava standardne margine i tipografiju karakterističnu za moderne Microsoft Word dokumente, iako je u potpunosti generiran bez korištenja samog Microsoft Office sučelja.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{slike/apache_poi_word_izlaz.png}
+    \caption{Word dokument kreiran pomoću Apache POI biblioteke}
+    \label{fig:word_kreiran_cista}
+\end{figure}
 
 \subsection{Izrada cirkularnog dokumenta}
 
