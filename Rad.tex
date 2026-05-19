@@ -1,4 +1,5 @@
 \documentclass[]{foi}
+% chktex-file 36
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[croatian]{babel}
@@ -90,7 +91,7 @@
 U suvremenom okruženju razmjena podataka putem Microsoft Office dokumenata svakodnevna je pojava. Excel tablice, Word dokumenti i PowerPoint prezentacije postali su de facto standard za izvještavanje, analizu podataka i komunikaciju. Međutim, ručna obrada takvih dokumenata u sustavima koji zahtijevaju automatizaciju, poput sustava za upravljanje sadržajem, poslovnih aplikacija ili alata za ekstrakciju podataka, nije praktična ni skalabilna.
 
 Apache POI projekt, koji razvija i održava Apache Software Foundation, nudi rješenje za ovaj problem u obliku besplatne Java biblioteke otvorenog koda. Biblioteka programerima omogućuje čitanje, pisanje i izmjenu Microsoft Office datoteka isključivo korištenjem Java koda, bez potrebe za instaliranim Microsoft Officeom. Time se postiže potpuna platformska neovisnost, što je posebno vrijedno u enterprise okruženjima koja se oslanjaju na Java ekosustav.
-
+ 
 Motivacija za odabir Apache POI-a kao teme ovog rada leži upravo u njegovoj rasprostranjenosti i praktičnoj primjenjivosti. Biblioteka je jedna od najkorištenijih Java biblioteka za rad s Office formatima i aktivno se razvija već više od dva desetljeća. Podržava kako starije binarne formate temeljene na OLE2 standardu (XLS, DOC, PPT), tako i moderne XML-bazirane OOXML formate uvedene s Microsoft Officeom 2007 (XLSX, DOCX, PPTX).
 
 Cilj ovog rada je sustavno prikazati arhitekturu i ključne komponente Apache POI projekta te demonstrirati njegovu primjenu na konkretnim primjerima. Rad je strukturiran na sljedeći način: drugo poglavlje donosi pregled povijesti projekta i njegovih tehničkih komponenti, treće poglavlje opisuje rad s pojedinim formatima datoteka, a četvrto poglavlje prikazuje praktične primjere generiranja Excel izvještaja i obrade Word dokumenta. Na kraju se iznosi zaključak s osvrtom na prednosti, ograničenja i smjernice za primjenu biblioteke.
@@ -138,31 +139,14 @@ HPBF & Publisher & .pub & OLE2 \\
 
 \section{Pregled dostupnih klasa}
 
-Apache POI biblioteka pruža iznimno bogat skup klasa koje pokrivaju gotovo sve 
-aspekte rada s Office dokumentima. Za Excel datoteke, klase poput 
-\texttt{XSSFWorkbook}, \texttt{XSSFSheet}, \texttt{XSSFCell} i 
-\texttt{XSSFCellStyle} omogućuju kreiranje i formatiranje tablica, dok 
-\texttt{XSSFChart} i \texttt{XDDFChartData} podržavaju generiranje grafova. Za 
-streaming obradu velikih datoteka dostupne su \texttt{SXSSFWorkbook} i 
-\texttt{SXSSFSheet}. Word dokumenti pokriveni su klasama \texttt{XWPFDocument}, 
-\texttt{XWPFParagraph}, \texttt{XWPFRun}, \texttt{XWPFTable} i 
-\texttt{XWPFHeaderFooter}, a za PowerPoint prezentacije koriste se 
-\texttt{XMLSlideShow}, \texttt{XSLFSlide}, \texttt{XSLFTextShape} i 
-\texttt{XSLFTable} \cite{apachePOIJavadoc}.
+Apache POI biblioteka pruža iznimno bogat skup klasa koje pokrivaju gotovo sve aspekte rada s Office dokumentima. Za Excel datoteke, klase poput \texttt{XSSFWorkbook}, \texttt{XSSFSheet}, \texttt{XSSFCell} i \texttt{XSSFCellStyle} omogućuju kreiranje i formatiranje tablica, dok \texttt{XSSFChart} i \texttt{XDDFChartData} podržavaju generiranje grafova. Za streaming obradu velikih datoteka dostupne su \texttt{SXSSFWorkbook} i \texttt{SXSSFSheet}. Word dokumenti pokriveni su klasama \texttt{XWPFRun}, \texttt{XWPFDocument}, \texttt{XWPFParagraph}, \texttt{XWPFTable} i \texttt{XWPFHeaderFooter}, a za PowerPoint prezentacije koriste se \texttt{XMLSlideShow}, \texttt{XSLFSlide}, \texttt{XSLFTextShape} i \texttt{XSLFTable} \cite{apachePOIJavadoc}.
 
-Uz rad s dokumentima, biblioteka nudi i infrastrukturne komponente. 
-\texttt{POIFSFileSystem} i \texttt{OPCPackage} upravljaju niskorazinskim pristupom 
-OLE2 i OOXML datotečnim strukturama. Klase iz paketa \texttt{EncryptionInfo}, 
-\texttt{Encryptor} i \texttt{Decryptor} omogućuju enkripciju i dekripciju 
-dokumenata. Za ekstrakciju teksta dostupne su \texttt{XWPFWordExtractor}, 
-\texttt{ExcelExtractor} i \texttt{SlideShowExtractor}, a \texttt{DataFormatter} i 
-\texttt{DateUtil} pomažu pri interpretaciji formata ćelija. Klase poput 
-\texttt{EmbeddedExtractor} i \texttt{PictureData} omogućuju ekstrakciju ugrađenih 
-slika i objekata iz dokumenata \cite{apachePOIJavadoc}.
+Uz rad s dokumentima, biblioteka nudi i infrastrukturne komponente. \texttt{POIFSFileSystem} i \texttt{OPCPackage} upravljaju niskorazinskim pristupom OLE2 i OOXML datotečnim strukturama. Klase iz paketa \texttt{EncryptionInfo}, \texttt{Encryptor} i \texttt{Decryptor} omogućuju enkripciju i dekripciju 
+dokumenata. Za ekstrakciju teksta dostupne su \texttt{XWPFWordExtractor}, \texttt{ExcelExtractor} i \texttt{SlideShowExtractor}, a \texttt{DataFormatter} i \texttt{DateUtil} pomažu pri interpretaciji formata ćelija. Klase poput \texttt{EmbeddedExtractor} i \texttt{PictureData} omogućuju ekstrakciju ugrađenih slika i objekata iz dokumenata \cite{apachePOIJavadoc}.
 
 \chapter{Rad s formatima datoteka}
 
-Ovo poglavlje rada posvećeno je praktičnoj primjeni Apache POI biblioteke za rad s tri najzastupljenija Microsoft Office formata — Excel tablicama, Word dokumentima i PowerPoint prezentacijama. Za svaki format postoje dvije implementacije koje odgovaraju dvjema generacijama Office standarda: starija binarna implementacija temeljena na OLE2 formatu te novija implementacija temeljena na OOXML standardu. U nastavku su opisane ključne mogućnosti svake implementacije, uz osvrt na specifičnosti pojedinih slučajeva korištenja \cite{apacheApachePOIComponents}.
+Ovo poglavlje rada posvećeno je praktičnoj primjeni Apache POI biblioteke za rad s tri najzastupljenija Microsoft Office formata, Excel tablicama, Word dokumentima i PowerPoint prezentacijama. Za svaki format postoje dvije implementacije koje odgovaraju dvjema generacijama Office standarda: starija binarna implementacija temeljena na OLE2 formatu te novija implementacija temeljena na OOXML standardu. U nastavku su opisane ključne mogućnosti svake implementacije, uz osvrt na specifičnosti pojedinih slučajeva korištenja \cite{apacheApachePOIComponents}.
 
 \section{Excel datoteke}
 
@@ -180,7 +164,7 @@ Glavna ulazna točka za rad s .docx datotekama je klasa XWPFDocument, iz koje se
 
 Za rad s PowerPoint prezentacijama Apache POI nudi dvije implementacije. HSLF (\textit{Horrible Slide Layout Format}) pokriva stariji binarni .ppt format koji odgovara PowerPoint verzijama 97–2003, a XSLF (\textit{XML Slide Layout Format}) namijenjen je modernom .pptx formatu temeljenom na OOXML standardu. Za razliku od Excel modula koji dijele zajednički SS API, HSLF i XSLF trenutno nemaju zajedničko sučelje, što znači da kod napisan za jedan format nije izravno prenosiv na drugi \cite{apachePOIHSLFQuick}.
 
-Glavna ulazna točka za rad s .pptx datotekama je klasa XMLSlideShow, dok je za stariji .ppt format to HSLFSlideShow. Prezentacija se sastoji od hijerarhijske strukture: prezentacija sadržava slajdove, svaki slajd sadržava oblike (shapes), a svaki oblik može sadržavati tekstualne okvire i odlomke. Slajdovi se kreiraju metodom \texttt{createSlide()}, pri čemu je moguće odabrati željeni predložak rasporeda (\textit{slide layout}) iz dostupnih rasporeda slide mastera. Oblici poput tekstualnih okvira, slika i tablica dodaju se metodama poput \texttt{createTextBox()} i \texttt{addPicture()}. Za naprednije slučajeve korištenja, XSLFSlide objekt implementira metodu \texttt{draw()} koja omogućuje iscrtavanje cijelog slajda na Java Graphics2D objekt, što je korisno za generiranje slika ili PDF-ova iz prezentacija \cite{apachePOIHSLFQuick}. % chktex 36
+Glavna ulazna točka za rad s .pptx datotekama je klasa XMLSlideShow, dok je za stariji .ppt format to HSLFSlideShow. Prezentacija se sastoji od hijerarhijske strukture: prezentacija sadržava slajdove, svaki slajd sadržava oblike (shapes), a svaki oblik može sadržavati tekstualne okvire i odlomke. Slajdovi se kreiraju metodom \texttt{createSlide()}, pri čemu je moguće odabrati željeni predložak rasporeda (\textit{slide layout}) iz dostupnih rasporeda slide mastera. Oblici poput tekstualnih okvira, slika i tablica dodaju se metodama poput \texttt{createTextBox()} i \texttt{addPicture()}. Za naprednije slučajeve korištenja, XSLFSlide objekt implementira metodu \texttt{draw()} koja omogućuje iscrtavanje cijelog slajda na Java Graphics2D objekt, što je korisno za generiranje slika ili PDF-ova iz prezentacija \cite{apachePOIHSLFQuick}.
 
 \chapter{Praktični primjeri}
 
@@ -203,17 +187,11 @@ Nakon kreiranja novog Maven projekta u Eclipseu putem File → New → Maven Pro
 
 \section{Kreiranje Word dokumenta}
 
-Kreiranje Word dokumenta u Apache POI-u temelji se na klasi \texttt{XWPFDocument}, 
-koja predstavlja glavni objekt dokumenta. Iz nje se kreiraju svi ostali elementi — 
-zaglavlja, podnožja, paragrafi i tablice \cite{apacheXWPFQuickGuide}.
+Kreiranje Word dokumenta u Apache POI-u temelji se na klasi \texttt{XWPFDocument}, koja predstavlja glavni objekt dokumenta. Iz nje se kreiraju svi ostali elementi, zaglavlja, podnožja, paragrafi i tablice \cite{apacheXWPFQuickGuide}.
 
 \subsection{Zaglavlje i podnožje}
 
-Zaglavlje i podnožje kreiraju se metodama \texttt{createHeader()} i 
-\texttt{createFooter()} uz parametar \texttt{HeaderFooterType.DEFAULT}, koji označava 
-da se primjenjuju na sve stranice dokumenta. Unutar zaglavlja i podnožja kreira se 
-paragraf, a tekst se dodaje kroz \texttt{XWPFRun} objekt. Isti princip — paragraf 
-koji sadrži jedan ili više \texttt{XWPFRun} objekata — koristi se za sve tekstualne 
+Zaglavlje i podnožje kreiraju se metodama \texttt{createHeader()} i \texttt{createFooter()} uz parametar \texttt{HeaderFooterType.DEFAULT}, koji označava da se primjenjuju na sve stranice dokumenta. Unutar zaglavlja i podnožja kreira se paragraf, a tekst se dodaje kroz \texttt{XWPFRun} objekt. Isti princip, paragraf koji sadrži jedan ili više \texttt{XWPFRun} objekata, koristi se za sve tekstualne 
 elemente u dokumentu \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=java, caption={Obrada Word dokumenta}]
@@ -229,14 +207,7 @@ zaglavljeRun.setColor("888888");
 \subsection{Paragrafi i stilovi}
 
 {\sloppy
-Paragrafi se kreiraju metodom \texttt{createParagraph()} na objektu dokumenta.
-Svaki paragraf može imati postavljeno poravnanje (\texttt{setAlignment()}), razmak
-prije ili nakon (\texttt{setSpacingBefore()}, \texttt{setSpacingAfter()}) te jedan
-ili više \texttt{XWPFRun} objekata koji nose stvarni tekst. Na razini \texttt{XWPFRun}
-objekta definiraju se stilska svojstva teksta: font (\texttt{setFontFamily()}),
-veličina (\texttt{setFontSize()}), boja (\texttt{setColor()}), podebljanje
-(\texttt{setBold()}) i kurziv (\texttt{setItalic()}). U primjeru su na ovaj način
-kreirani naslov, podnaslov, uvodni paragraf i završna napomena \cite{apacheXWPFQuickGuide}.
+Paragrafi se kreiraju metodom \texttt{createParagraph()} na objektu dokumenta. Svaki paragraf može imati postavljeno poravnanje (\texttt{setAlignment()}), razmak prije ili nakon (\texttt{setSpacingBefore()}, \texttt{setSpacingAfter()}) te jedan ili više \texttt{XWPFRun} objekata koji nose stvarni tekst. Na razini \texttt{XWPFRun} objekta definiraju se stilska svojstva teksta: font (\texttt{setFontFamily()}), veličina (\texttt{setFontSize()}), boja (\texttt{setColor()}), podebljanje (\texttt{setBold()}) i kurziv (\texttt{setItalic()}). U primjeru su na ovaj način kreirani naslov, podnaslov, uvodni paragraf i završna napomena \cite{apacheXWPFQuickGuide}.
 \par}
 
 \begin{lstlisting}[style=Java, caption={Kreiranje naslova}]
@@ -252,14 +223,9 @@ naslovRun.setFontFamily("Calibri");
 
 \subsection{Tablica}
 
-Tablica se kreira metodom \texttt{createTable()} uz navođenje broja redova i stupaca. 
-U primjeru je kreirana tablica s 6 redova i 3 stupca — prvi red služi kao zaglavlje 
-tablice, a preostalih 5 redova sadrži podatke o studentima \cite{apacheXWPFQuickGuide}.
+Tablica se kreira metodom \texttt{createTable()} uz navođenje broja redova i stupaca. U primjeru je kreirana tablica s 6 redova i 3 stupca, prvi red služi kao zaglavlje tablice, a preostalih 5 redova sadrži podatke o studentima \cite{apacheXWPFQuickGuide}.
 
-Zaglavlje tablice stilizira se plavom pozadinskom bojom (\texttt{setColor()}) i 
-bijelim podebljanim tekstom. Svaka ćelija zaglavlja dohvaća se metodom 
-\texttt{getCell()} iz odgovarajućeg reda, a tekst se dodaje na isti način kao i u 
-paragrafima dokumenta — kroz \texttt{XWPFParagraph} i \texttt{XWPFRun} objekte \cite{apacheXWPFQuickGuide}.
+Zaglavlje tablice stilizira se plavom pozadinskom bojom (\texttt{setColor()}) i bijelim podebljanim tekstom. Svaka ćelija zaglavlja dohvaća se metodom \texttt{getCell()} iz odgovarajućeg reda, a tekst se dodaje na isti način kao i u paragrafima dokumenta, kroz \texttt{XWPFParagraph} i \texttt{XWPFRun} objekte \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=Java, caption=Kreiranje zaglavlja tablice]
 XWPFTable tablica = dokument.createTable(6, 3);
@@ -280,9 +246,7 @@ for (int i = 0; i < zaglavljaStupaca.length; i++) {
 }
 \end{lstlisting}
 
-Redovi s podacima pune se iteracijom kroz dvodimenzionalno polje. Radi bolje 
-čitljivosti, primijenjeno je izmjenično bojanje redova — parni redovi ostaju bijeli, 
-a neparni dobivaju svijetloplavu pozadinsku boju \cite{apacheXWPFQuickGuide}.
+Redovi s podacima pune se iteracijom kroz dvodimenzionalno polje. Radi bolje čitljivosti, primijenjeno je izmjenično bojanje redova, parni redovi ostaju bijeli, a neparni dobivaju svijetloplavu pozadinsku boju \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=Java, caption=Punjenje tablice podacima]
 for (int i = 0; i < podaci.length; i++) {
@@ -302,10 +266,7 @@ for (int i = 0; i < podaci.length; i++) {
 
 \subsection{Spremanje dokumenta}
 
-Po završetku izgradnje dokumenta, korištenjem 
-\texttt{FileOutputStream} sadržaj se zapisuje u datoteku objekta. Preporučuje se korištenje \texttt{try-with-resources} 
-bloka koji osigurava automatsko zatvaranje toka podataka nakon zapisivanja, čime se 
-sprječava curenje resursa \cite{apacheXWPFOverview}.
+Po završetku izgradnje dokumenta, korištenjem \texttt{FileOutputStream} sadržaj se zapisuje u datoteku objekta. Preporučuje se korištenje \texttt{try-with-resources} bloka koji osigurava automatsko zatvaranje toka podataka nakon zapisivanja, čime se sprječava curenje resursa \cite{apacheXWPFOverview}.
 
 \begin{lstlisting}[style=Java, caption=Spremanje dokumenta]
 try (FileOutputStream out = new FileOutputStream("studenti.docx")) {
@@ -344,7 +305,7 @@ Predložak bi izgledao na sljedeći način:
 \begin{mdframed}
 Poštovani/a \texttt{\{\{IME\}\}} \texttt{\{\{PREZIME\}\}},
 
-obavještavamo Vas kako ste na kolegiju \texttt{\{\{KOLEGIJ\}\}} ostvarili ocjenu \texttt{\{\{OCJENA\}\}}.
+na kolegiju \texttt{\{\{KOLEGIJ\}\}} ste ostvarili ocjenu \texttt{\{\{OCJENA\}\}}.
 
 JMBAG: \texttt{\{\{JMBAG\}\}}
 
@@ -369,18 +330,111 @@ U Prilogu se nalazi Java kod koji demonstrira kako se koristi Apache POI za čit
 
 Program se sastoji od dvije metode: \texttt{main()} koja upravlja ukupnim tokom izvođenja i pomoćne metode \texttt{zamijeniUParagrafu()} koja provodi zamjenu placeholdera unutar pojedinog paragrafa.
 
-U metodi \texttt{main()} najprije se definiraju putanje do predloška i CSV datoteke te se automatski generira trenutni datum korištenjem \texttt{LocalDate.now()}. CSV datoteka čita se redak po redak korištenjem \texttt{BufferedReader} klase, pri čemu se prvi redak (zaglavlje) preskače zastavicom \texttt{prviRed}. Svaki sljedeći redak dijeli se po zarezu metodom \texttt{split(",")}, a vrijednosti se pohranjuju u zasebne varijable. Za svakog studenta predložak se učitava kao novi \texttt{XWPFDocument} objekt kako bi svaki generirani dokument krenuo od čistog predloška. Po završetku 
+U metodi \texttt{main()} najprije se definiraju putanje do predloška i CSV datoteke te se automatski generira trenutni datum korištenjem \texttt{LocalDate.now()}. CSV datoteka čita se redak po redak korištenjem \texttt{BufferedReader} klase, pri čemu se prvi redak (zaglavlje) preskače zastavicom \texttt{prviRed}. Svaki sljedeći redak dijeli se po zarezu metodom \texttt{split('','')}, a vrijednosti se pohranjuju u zasebne varijable. Za svakog studenta predložak se učitava kao novi \texttt{XWPFDocument} objekt kako bi svaki generirani dokument krenuo od čistog predloška. Po završetku 
 zamjene, dokument se sprema pod nazivom oblika \texttt{obavijest\_Ime\_Prezime.docx}.
 
-Metoda \texttt{zamijeniUParagrafu()} rješava specifičan problem XWPF implementacije — Word dokument interno može razbiti jedan vidljivi tekst u više \texttt{XWPFRun} objekata, zbog čega jednostavna zamjena po pojedinom odsječku ne bi mogla prepoznati cijeli placeholder. Metoda stoga najprije spaja 
+Metoda \texttt{zamijeniUParagrafu()} rješava specifičan problem XWPF implementacije, Word dokument interno može razbiti jedan vidljivi tekst u više \texttt{XWPFRun} objekata, zbog čega jednostavna zamjena po pojedinom odsječku ne bi mogla prepoznati cijeli placeholder. Metoda najprije spaja 
 tekstove svih odsječaka paragrafa u jedan string korištenjem \texttt{StringBuilder} klase, zatim provodi zamjenu svih placeholdera, a konačni tekst upisuje u prvi odsječak dok ostale odsječke prazni. Na taj način stilska svojstva prvog odsječka ostaju sačuvana, a sadržaj je ispravno popunjen.
 
 \section{Generiranje Excel izvještaja}
-Primjer automatskog generiranja tablice i grafa iz podataka.
 
-\begin{lstlisting}[style=java, caption={Generiranje Excel izvještaja}]
-% TODO: dodaj Java kod ovdje
+Generiranje Excel datoteke u Apache POI-u temelji se na hijerarhiji triju objekata: \texttt{XSSFWorkbook} predstavlja cijelu radnu knjigu (engl. \textit{workbook}), \texttt{XSSFSheet} predstavlja jedan list unutar nje, a \texttt{Row} i \texttt{Cell} odgovaraju retku i ćeliji na listu. Svi se kreiraju redom, od radne knjige prema ćeliji \cite{apachePOISpreadsheetQuickGuide}.
+
+\subsection{Stilovi i formatiranje}
+
+Za razliku od rada s Word dokumentima gdje se stil veže uz \texttt{XWPFRun} objekt, u Excel modulima stil se definira kao zasebni \texttt{XSSFCellStyle} objekt koji se kreira na razini radne knjige i potom dodjeljuje pojedinim ćelijama. Jedan stil može se primijeniti na više ćelija, što je važno jer
+svaka radna knjiga podržava ograničen broj jedinstvenih stilova. Font se kreira odvojeno metodom \texttt{createFont()} na objektu radne knjige te potom veže uz stil metodom \texttt{setFont()} \cite{apachePOISpreadsheetQuickGuide}.
+
+Boja pozadine ćelije postavlja se kombinacijom:
+
+\begin{itemize}
+    \item \texttt{setFillForegroundColor()}
+    \item \texttt{setFillPattern()}
+\end{itemize}
+
+pri čemu se za jednobojno ispunjenje koristi \texttt{FillPatternType.SOLID\_FOREGROUND}. Boja se predaje kao \texttt{XSSFColor} objekt koji prima standardni \texttt{java.awt.Color}:
+
+\begin{lstlisting}[style=java, caption={Kreiranje stilova ćelija}]
+XSSFCellStyle stilZaglavlja = radnaKnjiga.createCellStyle();
+stilZaglavlja.setFillForegroundColor(new XSSFColor(
+        new java.awt.Color(46, 117, 182), new DefaultIndexedColorMap()));
+stilZaglavlja.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+stilZaglavlja.setAlignment(HorizontalAlignment.CENTER);
+
+XSSFFont fontZaglavlja = radnaKnjiga.createFont();
+fontZaglavlja.setBold(true);
+fontZaglavlja.setColor(new XSSFColor(
+        new java.awt.Color(255, 255, 255), new DefaultIndexedColorMap()));
+fontZaglavlja.setFontHeightInPoints((short) 11);
+stilZaglavlja.setFont(fontZaglavlja);
 \end{lstlisting}
+
+\subsection{Popunjavanje tablice}
+
+Redovi se kreiraju metodom \texttt{createRow()} na objektu lista, a metodom \texttt{createCell()} ćelije na retku. Vrijednost ćelije postavlja se metodom \texttt{setCellValue()}, koja je preopterećena i prima \texttt{String}, \texttt{double}, \texttt{boolean} ili \texttt{Date}. Numeričke vrijednosti potrebno je pohraniti kao broj (a ne kao string) kako bi formule mogle nad njima raditi ispravno \cite{apachePOISpreadsheetQuickGuide}.
+
+U primjeru je primijenjeno isto izmjenično bojanje redova kao u Word tablici iz prethodne sekcije: parni redovi ostaju bijeli, a neparni dobivaju svijetloplavu pozadinsku boju.
+
+\begin{lstlisting}[style=java, caption={Popunjavanje tablice podacima}]
+for (int i = 0; i < podaci.length; i++) {
+    Row red = list.createRow(i + 1);
+    XSSFCellStyle stil = (i % 2 == 0) ? stilParni : stilNeparni;
+    for (int j = 0; j < podaci[i].length; j++) {
+        Cell celija = red.createCell(j);
+        if (j == 3) {
+            celija.setCellValue(Integer.parseInt(podaci[i][j]));
+        } else {
+            celija.setCellValue(podaci[i][j]);
+        }
+        celija.setCellStyle(stil);
+    }
+}
+\end{lstlisting}
+
+\subsection{Formule}
+
+Formule se unose metodom \texttt{setCellFormula()} koja prima string s formulom u Excel sintaksi, identičnoj onoj kakvu korisnik upisuje izravno u Excel. U primjeru se koristi formula \texttt{AVERAGE(D2:D6)} koja izračunava prosjek numeričkih ocjena unesenih u stupac D \cite{apachePOISpreadsheetQuickGuide}.
+
+\begin{lstlisting}[style=java, caption={Unos formule i formatiranje retka}]
+Row redFormule = list.createRow(zadnjiRed);
+
+Cell celijaOznaka = redFormule.createCell(2);
+celijaOznaka.setCellValue("Prosjek ocjena:");
+celijaOznaka.setCellStyle(stilZbroj);
+
+Cell celijaFormula = redFormule.createCell(3);
+celijaFormula.setCellFormula("AVERAGE(D2:D6)");
+celijaFormula.setCellStyle(stilZbroj);
+\end{lstlisting}
+
+\subsection{Automatska širina stupaca i zamrzavanje zaglavlja}
+
+Apache POI nudi dvije korisne metode za poboljšanje preglednosti tablice. Metoda \texttt{autoSizeColumn()} automatski prilagođava širinu stupca najširem sadržaju u njemu, a zamrzava određenog broja redova ili stupaca metodom \texttt{createFreezePane()}, čime zaglavlje ostaje vidljivo pri pomicanju kroz dugačke tablice \cite{apachePOISpreadsheetQuickGuide}.
+
+\begin{lstlisting}[style=java, caption={Automatska širina i zamrzavanje zaglavlja}]
+for (int i = 0; i < stupci.length; i++) {
+    list.autoSizeColumn(i);
+}
+list.createFreezePane(0, 1);
+\end{lstlisting}
+
+Na Slici~\ref{fig:excel_kreiran_cista} prikazan je finalni izgled datoteke u formatu \texttt{.xlsx} generirane programskim putem. Vizualni prikaz potvrđuje uspješnu primjenu stilova i formula putem Apache POI API-ja.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{slike/apache_poi_excel_izlaz.png}
+    \caption{Excel dokument kreiran pomoću Apache POI biblioteke}
+    \label{fig:excel_kreiran_cista}
+\end{figure}
+
+U donjem dijelu sučelja vidljiva je kartica lista s nazivom \textit{Ocjene studenata}, koji je postavljen pri kreiranju lista metodom \texttt{createSheet()}.
+
+Središnji strukturni element je tablica s podacima o studentima. Na slici se jasno razaznaje primjena stilova:
+\begin{itemize}
+    \item \textbf{Zaglavlje tablice} (redak 1) istaknuto je plavom pozadinom i bijelim podebljanim tekstom, uz automatski prilagođenu širinu stupaca metodom \texttt{autoSizeColumn()}.
+    \item \textbf{Tijelo tablice} koristi tehniku izmjeničnog bojanja redova (tzv. \textit{zebra striping}), što olakšava praćenje podataka u redovima.
+    \item \textbf{Redak s formulom} (redak 7) vizualno je odvojen gornjim rubom i podebljanim tekstom, a ćelija D7 prikazuje rezultat formule \texttt{AVERAGE(D2:D6)}, izračunati prosjek ocjena iznosi 4,2.
+\end{itemize}
 
 \chapter{Zaključak}
 Sažetak ključnih spoznaja i smjernice za primjenu Apache POI-a.
