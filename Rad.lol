@@ -12,6 +12,6 @@
 \contentsline {lstlisting}{\numberline {8}{\ignorespaces Kreiranje stilova ćelija}}{11}{lstlisting.8}%
 \contentsline {lstlisting}{\numberline {9}{\ignorespaces Popunjavanje tablice podacima}}{12}{lstlisting.9}%
 \contentsline {lstlisting}{\numberline {10}{\ignorespaces Unos formule i formatiranje retka}}{12}{lstlisting.10}%
-\contentsline {lstlisting}{\numberline {11}{\ignorespaces Automatska širina i zamrzavanje zaglavlja}}{13}{lstlisting.11}%
+\contentsline {lstlisting}{\numberline {11}{\ignorespaces Automatska širina i zamrzavanje zaglavlja}}{12}{lstlisting.11}%
 \addvspace {10\p@ }
-\contentsline {lstlisting}{\numberline {12}{\ignorespaces Cirkularno pismo}}{21}{lstlisting.12}%
+\contentsline {lstlisting}{\numberline {12}{\ignorespaces Cirkularno pismo}}{20}{lstlisting.12}%

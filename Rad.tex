@@ -71,9 +71,9 @@
 
 
 
-\sazetak{Opsega od 100 do 300 riječi. Sažetak upućuje na temu rada, ukratko se iznosi čime se rad bavi, teorijsko-metodološka polazišta, glavne teze i smjer rada te zaključci.}
+\sazetak{Apache POI je Java biblioteka otvorenog koda koju razvija Apache Software Foundation, a namijenjena je programskom čitanju, pisanju i izmjeni Microsoft Office dokumenata bez potrebe za instaliranim Microsoft Officeom. Biblioteka podržava kako starije binarne formate temeljene na OLE2 standardu (XLS, DOC, PPT), tako i moderne OOXML formate uvedene s Microsoft Officeom 2007 (XLSX, DOCX, PPTX). Rad prikazuje arhitekturu projekta i njegove ključne module, HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF i XSLF te demonstrira praktičnu primjenu na dva konkretna primjera. Prvi primjer prikazuje programsko kreiranje Word dokumenta s tablicom podataka o studentima, uključujući stilizaciju zaglavlja i izmjenično bojanje redova, kao i tehniku cirkularnog pisma za masovnu personalizaciju dokumenata pomoću predloška i CSV izvora podataka. Drugi primjer prikazuje generiranje Excel izvještaja s primjenom stilova, ugrađenih formula i automatskog prilagođavanja širine stupaca. Zaključno se razmatraju prednosti i ograničenja biblioteke te smjernice za njezinu primjenu u poslovnim okruženjima.}
 
-\kljucneRijeci{riječ; riječ; riječ; Obuhvaća $7\pm2$ ključna pojma koji su glavni predmet rasprave u radu.}
+\kljucneRijeci{Apache POI; Java; Microsoft Office; OOXML; Excel; Word; cirkularno pismo; grafovi; automatizacija; Maven}
 
 \begin{document}
 
@@ -88,13 +88,14 @@
 \pagestyle{plain}
 
 \chapter{Uvod}
-U suvremenom okruženju razmjena podataka putem Microsoft Office dokumenata svakodnevna je pojava. Excel tablice, Word dokumenti i PowerPoint prezentacije postali su de facto standard za izvještavanje, analizu podataka i komunikaciju. Međutim, ručna obrada takvih dokumenata u sustavima koji zahtijevaju automatizaciju, poput sustava za upravljanje sadržajem, poslovnih aplikacija ili alata za ekstrakciju podataka, nije praktična ni skalabilna.
 
-Apache POI projekt, koji razvija i održava Apache Software Foundation, nudi rješenje za ovaj problem u obliku besplatne Java biblioteke otvorenog koda. Biblioteka programerima omogućuje čitanje, pisanje i izmjenu Microsoft Office datoteka isključivo korištenjem Java koda, bez potrebe za instaliranim Microsoft Officeom. Time se postiže potpuna platformska neovisnost, što je posebno vrijedno u enterprise okruženjima koja se oslanjaju na Java ekosustav.
+U suvremenom okruženju razmjena podataka putem Microsoft Office dokumenata je nešto što se podrazumijeva. Excel tablice, Word dokumenti i PowerPoint prezentacije postali su de-facto standard za izvještavanje, analizu podataka i komunikaciju. Ručna obrada takvih dokumenata u sustavima koji zahtijevaju automatizaciju, poput sustava za upravljanje sadržajem, poslovnih aplikacija ili alata za ekstrakciju podataka, nije praktična ni skalabilna.
+
+Apache POI projekt, koji razvija i održava Apache Software Foundation, nudi rješenje za ovaj problem u obliku besplatne Java biblioteke otvorenog koda. Biblioteka programerima omogućuje čitanje, pisanje i izmjenu Microsoft Office datoteka isključivo korištenjem Java koda, bez potrebe za instaliranim Microsoft Officeom. Time se postiže potpuna platformska neovisnost, što je posebno vrijedno u poslovnim okruženjima koja se oslanjaju na Java ekosustav.
  
 Motivacija za odabir Apache POI-a kao teme ovog rada leži upravo u njegovoj rasprostranjenosti i praktičnoj primjenjivosti. Biblioteka je jedna od najkorištenijih Java biblioteka za rad s Office formatima i aktivno se razvija već više od dva desetljeća. Podržava kako starije binarne formate temeljene na OLE2 standardu (XLS, DOC, PPT), tako i moderne XML-bazirane OOXML formate uvedene s Microsoft Officeom 2007 (XLSX, DOCX, PPTX).
 
-Cilj ovog rada je sustavno prikazati arhitekturu i ključne komponente Apache POI projekta te demonstrirati njegovu primjenu na konkretnim primjerima. Rad je strukturiran na sljedeći način: drugo poglavlje donosi pregled povijesti projekta i njegovih tehničkih komponenti, treće poglavlje opisuje rad s pojedinim formatima datoteka, a četvrto poglavlje prikazuje praktične primjere generiranja Excel izvještaja i obrade Word dokumenta. Na kraju se iznosi zaključak s osvrtom na prednosti, ograničenja i smjernice za primjenu biblioteke.
+Cilj ovog rada je sustavno prikazati arhitekturu i ključne komponente Apache POI projekta te demonstrirati njegovu primjenu na konkretnim primjerima. Rad počinje pregledom povijesti i arhitekture projekta, zatim obrađuje rad s pojedinim formatima, a završava praktičnim primjerima generiranja dokumenata.
 
 \chapter{Pregled Apache POI projekta}
 
@@ -108,11 +109,7 @@ Naziv projekta izvorno je bio akronim za ``\textit{Poor Obfuscation Implementati
 
 \section{Arhitektura i komponente}
 
-Na ovoj infrastrukturi izgrađeni su moduli koji programerima nude intuitivan API 
-za rad s Office dokumentima, apstrahirajući složenost internih binarnih i XML 
-struktura. Pregled svih modula, njihovih formata i standarda prikazan je u 
-Tablici~\ref{tab:poi-moduli}, a detaljniji pregled ključnih klasa po kategorijama 
-dan je u nastavku \cite{apacheApachePOIComponents}.
+Na ovoj infrastrukturi izgrađeni su moduli koji programerima nude intuitivan API za rad s Office dokumentima, apstrahirajući složenost internih binarnih i XML struktura. Pregled svih modula, njihovih formata i standarda prikazan je u Tablici~\ref{tab:poi-moduli}, a detaljniji pregled ključnih klasa po kategorijama dan je u nastavku \cite{apacheApachePOIComponents}.
 
 \begin{table}[H]
 \centering
@@ -122,7 +119,7 @@ dan je u nastavku \cite{apacheApachePOIComponents}.
 \toprule
 \textbf{Modul} & \textbf{Format} & \textbf{Ekstenzija} & \textbf{Standard} \\
 \midrule
-POIFS & OLE2 datotečni sustav & — & OLE2 \\
+POIFS & OLE2 datotečni sustav &, & OLE2 \\
 HSSF & Excel (stari) & .xls & OLE2 \\
 XSSF & Excel (novi) & .xlsx & OOXML \\
 SXSSF & Excel (streaming) & .xlsx & OOXML \\
@@ -141,8 +138,7 @@ HPBF & Publisher & .pub & OLE2 \\
 
 Apache POI biblioteka pruža iznimno bogat skup klasa koje pokrivaju gotovo sve aspekte rada s Office dokumentima. Za Excel datoteke, klase poput \texttt{XSSFWorkbook}, \texttt{XSSFSheet}, \texttt{XSSFCell} i \texttt{XSSFCellStyle} omogućuju kreiranje i formatiranje tablica, dok \texttt{XSSFChart} i \texttt{XDDFChartData} podržavaju generiranje grafova. Za streaming obradu velikih datoteka dostupne su \texttt{SXSSFWorkbook} i \texttt{SXSSFSheet}. Word dokumenti pokriveni su klasama \texttt{XWPFRun}, \texttt{XWPFDocument}, \texttt{XWPFParagraph}, \texttt{XWPFTable} i \texttt{XWPFHeaderFooter}, a za PowerPoint prezentacije koriste se \texttt{XMLSlideShow}, \texttt{XSLFSlide}, \texttt{XSLFTextShape} i \texttt{XSLFTable} \cite{apachePOIJavadoc}.
 
-Uz rad s dokumentima, biblioteka nudi i infrastrukturne komponente. \texttt{POIFSFileSystem} i \texttt{OPCPackage} upravljaju niskorazinskim pristupom OLE2 i OOXML datotečnim strukturama. Klase iz paketa \texttt{EncryptionInfo}, \texttt{Encryptor} i \texttt{Decryptor} omogućuju enkripciju i dekripciju 
-dokumenata. Za ekstrakciju teksta dostupne su \texttt{XWPFWordExtractor}, \texttt{ExcelExtractor} i \texttt{SlideShowExtractor}, a \texttt{DataFormatter} i \texttt{DateUtil} pomažu pri interpretaciji formata ćelija. Klase poput \texttt{EmbeddedExtractor} i \texttt{PictureData} omogućuju ekstrakciju ugrađenih slika i objekata iz dokumenata \cite{apachePOIJavadoc}.
+Uz rad s dokumentima, biblioteka nudi i infrastrukturne komponente. \texttt{POIFSFileSystem} i \texttt{OPCPackage} upravljaju niskorazinskim pristupom OLE2 i OOXML datotečnim strukturama. Klase iz paketa \texttt{EncryptionInfo}, \texttt{Encryptor} i \texttt{Decryptor} omogućuju enkripciju i dekripciju dokumenata. Za ekstrakciju teksta dostupne su \texttt{XWPFWordExtractor}, \texttt{ExcelExtractor} i \texttt{SlideShowExtractor}, a \texttt{DataFormatter} i \texttt{DateUtil} pomažu pri interpretaciji formata ćelija. Klase poput \texttt{EmbeddedExtractor} i \texttt{PictureData} omogućuju ekstrakciju ugrađenih slika i objekata iz dokumenata \cite{apachePOIJavadoc}.
 
 \chapter{Rad s formatima datoteka}
 
@@ -191,8 +187,7 @@ Kreiranje Word dokumenta u Apache POI-u temelji se na klasi \texttt{XWPFDocument
 
 \subsection{Zaglavlje i podnožje}
 
-Zaglavlje i podnožje kreiraju se metodama \texttt{createHeader()} i \texttt{createFooter()} uz parametar \texttt{HeaderFooterType.DEFAULT}, koji označava da se primjenjuju na sve stranice dokumenta. Unutar zaglavlja i podnožja kreira se paragraf, a tekst se dodaje kroz \texttt{XWPFRun} objekt. Isti princip, paragraf koji sadrži jedan ili više \texttt{XWPFRun} objekata, koristi se za sve tekstualne 
-elemente u dokumentu \cite{apacheXWPFQuickGuide}.
+Zaglavlje i podnožje kreiraju se metodama \texttt{createHeader()} i \texttt{createFooter()} uz parametar \texttt{HeaderFooterType.DEFAULT}, koji označava da se primjenjuju na sve stranice dokumenta. Unutar zaglavlja i podnožja kreira se paragraf, a tekst se dodaje kroz \texttt{XWPFRun} objekt. Isti princip, paragraf koji sadrži jedan ili više \texttt{XWPFRun} objekata, koristi se za sve tekstualne elemente u dokumentu \cite{apacheXWPFQuickGuide}.
 
 \begin{lstlisting}[style=java, caption={Obrada Word dokumenta}]
 XWPFHeader zaglavlje = dokument.createHeader(HeaderFooterType.DEFAULT);
@@ -275,18 +270,16 @@ try (FileOutputStream out = new FileOutputStream("studenti.docx")) {
 dokument.close();
 \end{lstlisting}
 
-Na Slici~\ref{fig:word_kreiran_cista} prikazan je finalni izgled dokumenta u formatu \texttt{.docx} generiranog programskim putem. Vizualni prikaz potvrđuje uspješnu integraciju svih ključnih komponenti Apache POI API-ja o kojima je bilo riječi u prethodnim poglavljima. 
+Na Slici~\ref{fig:word_kreiran_cista} prikazan je finalni izgled dokumenta u formatu \texttt{.docx} generiranog programskim putem. U gornjem dijelu dokumenta vidljivo je zaglavlje (\textit{header}) s centriranim tekstom institucije, dok je u središnjem dijelu naslov definiran povećanim fontom i podebljanim stilom (\textbf{bold}), čime se postiže jasna vizualna hijerarhija. Ispod naslova nalazi se tekstualni odlomak koji služi kao uvod u podatke.
 
-U gornjem dijelu dokumenta vidljivo je zaglavlje (\textit{header}) s centriranim tekstom institucije, dok središnjim dijelom dominira naslov definiran povećanim fontom i podebljanim stilom (\textbf{bold}), čime se postiže jasna vizualna hijerarhija. Ispod naslova nalazi se tekstualni odlomak koji služi kao uvod u podatke.
-
-Središnji strukturni element dokumenta je tablica s podacima o studentima. Na slici se jasno razaznaje primjena stilova nad tablicom:
+Središnji strukturni element dokumenta je tablica s podacima o studentima. Na slici se vidi primjena stilova nad tablicom:
 \begin{itemize}
     \item \textbf{Zaglavlje tablice} istaknuto je tamnijom bojom pozadine i bijelim tekstom radi bolje čitljivosti.
     \item \textbf{Tijelo tablice} koristi tehniku izmjeničnog bojanja redova (tzv. \textit{zebra striping}), što olakšava praćenje podataka u redovima.
-    \item \textbf{Poravnanje sadržaja} unutar ćelija je uniformno, što demonstrira preciznu kontrolu nad \texttt{XWPFTableCell} objektima.
+    \item \textbf{Poravnanje sadržaja} unutar ćelija je uniforman.
 \end{itemize}
 
-Konačno, na dnu stranice nalazi se završna napomena, a cijeli dokument zadržava standardne margine i tipografiju karakterističnu za moderne Microsoft Word dokumente, iako je u potpunosti generiran bez korištenja samog Microsoft Office sučelja.
+Na dnu stranice nalazi se završna napomena, a cijeli dokument zadržava standardne margine i tipografiju karakterističnu za moderne Microsoft Word dokumente, iako je u potpunosti generiran bez korištenja samog Microsoft Office sučelja.
 
 \begin{figure}[!ht]
     \centering
@@ -297,8 +290,7 @@ Konačno, na dnu stranice nalazi se završna napomena, a cijeli dokument zadrža
 
 \subsection{Izrada cirkularnog dokumenta}
 
-Na ovom mjestu će se opisati ideja igradnje cirkularnog pisam uz pomoć \texttt{XWPFDocument} klase. Cirkularno pismo je tehnika masovne personalizacije
-dokumenta. Prije nego što se uopće krene s implementacijom, potrebno je kreirati predložak dokumenta koji sadrži rezervirana mjesta (placeholdere) za dinamičke podatke. U konkretnom primjeru, u Word dokumentu se koriste oznake \texttt{\{\{IME\}\}}, \texttt{\{\{PREZIME\}\}}, \texttt{\{\{JMBAG\}\}}, \texttt{\{\{KOLEGIJ\}\}},\texttt{\{\{DATUM\}\}}  i \texttt{\{\{OCJENA\}\}} koje će se kasnije zamijeniti stvarnim vrijednostima iz CSV datoteke kao izvora podataka. Ove oznake su lako prepoznatljive i ne sadrže razmake, što olakšava njihovu identifikaciju u kodu.
+Na ovom mjestu opisuje se ideja izgradnje cirkularnog pisma uz pomoć \texttt{XWPFDocument} klase. Cirkularno pismo je tehnika masovne personalizacije dokumenta. Prije nego što se uopće krene s implementacijom, potrebno je kreirati predložak dokumenta koji sadrži rezervirana mjesta (placeholdere) za dinamičke podatke. U konkretnom primjeru, u Word dokumentu se koriste oznake \texttt{\{\{IME\}\}}, \texttt{\{\{PREZIME\}\}}, \texttt{\{\{JMBAG\}\}}, \texttt{\{\{KOLEGIJ\}\}},\texttt{\{\{DATUM\}\}}  i \texttt{\{\{OCJENA\}\}} koje će se kasnije zamijeniti stvarnim vrijednostima iz CSV datoteke kao izvora podataka. Ove oznake su lako prepoznatljive i ne sadrže razmake, što olakšava njihovu identifikaciju u kodu.
 
 Predložak bi izgledao na sljedeći način:
 
@@ -330,11 +322,9 @@ U Prilogu se nalazi Java kod koji demonstrira kako se koristi Apache POI za čit
 
 Program se sastoji od dvije metode: \texttt{main()} koja upravlja ukupnim tokom izvođenja i pomoćne metode \texttt{zamijeniUParagrafu()} koja provodi zamjenu placeholdera unutar pojedinog paragrafa.
 
-U metodi \texttt{main()} najprije se definiraju putanje do predloška i CSV datoteke te se automatski generira trenutni datum korištenjem \texttt{LocalDate.now()}. CSV datoteka čita se redak po redak korištenjem \texttt{BufferedReader} klase, pri čemu se prvi redak (zaglavlje) preskače zastavicom \texttt{prviRed}. Svaki sljedeći redak dijeli se po zarezu metodom \texttt{split('','')}, a vrijednosti se pohranjuju u zasebne varijable. Za svakog studenta predložak se učitava kao novi \texttt{XWPFDocument} objekt kako bi svaki generirani dokument krenuo od čistog predloška. Po završetku 
-zamjene, dokument se sprema pod nazivom oblika \texttt{obavijest\_Ime\_Prezime.docx}.
+U metodi \texttt{main()} najprije se definiraju putanje do predloška i CSV datoteke te se automatski generira trenutni datum korištenjem \texttt{LocalDate.now()}. CSV datoteka čita se redak po redak korištenjem \texttt{BufferedReader} klase, pri čemu se prvi redak (zaglavlje) preskače zastavicom \texttt{prviRed}. Svaki sljedeći redak dijeli se po zarezu metodom \texttt{split('','')}, a vrijednosti se pohranjuju u zasebne varijable. Za svakog studenta predložak se učitava kao novi \texttt{XWPFDocument} objekt kako bi svaki generirani dokument krenuo od čistog predloška. Po završetku zamjene, dokument se sprema pod nazivom oblika \texttt{obavijest\_Ime\_Prezime.docx}.
 
-Metoda \texttt{zamijeniUParagrafu()} rješava specifičan problem XWPF implementacije, Word dokument interno može razbiti jedan vidljivi tekst u više \texttt{XWPFRun} objekata, zbog čega jednostavna zamjena po pojedinom odsječku ne bi mogla prepoznati cijeli placeholder. Metoda najprije spaja 
-tekstove svih odsječaka paragrafa u jedan string korištenjem \texttt{StringBuilder} klase, zatim provodi zamjenu svih placeholdera, a konačni tekst upisuje u prvi odsječak dok ostale odsječke prazni. Na taj način stilska svojstva prvog odsječka ostaju sačuvana, a sadržaj je ispravno popunjen.
+Metoda \texttt{zamijeniUParagrafu()} rješava specifičan problem XWPF implementacije, Word dokument interno može razbiti jedan vidljivi tekst u više \texttt{XWPFRun} objekata, zbog čega jednostavna zamjena po pojedinom odsječku ne bi mogla prepoznati cijeli placeholder. Metoda najprije spaja tekstove svih odsječaka paragrafa u jedan string korištenjem \texttt{StringBuilder} klase, zatim provodi zamjenu svih placeholdera, a konačni tekst upisuje u prvi odsječak dok ostale odsječke prazni. Na taj način stilska svojstva prvog odsječka ostaju sačuvana, a sadržaj je ispravno popunjen.
 
 \section{Generiranje Excel izvještaja}
 
@@ -342,8 +332,7 @@ Generiranje Excel datoteke u Apache POI-u temelji se na hijerarhiji triju objeka
 
 \subsection{Stilovi i formatiranje}
 
-Za razliku od rada s Word dokumentima gdje se stil veže uz \texttt{XWPFRun} objekt, u Excel modulima stil se definira kao zasebni \texttt{XSSFCellStyle} objekt koji se kreira na razini radne knjige i potom dodjeljuje pojedinim ćelijama. Jedan stil može se primijeniti na više ćelija, što je važno jer
-svaka radna knjiga podržava ograničen broj jedinstvenih stilova. Font se kreira odvojeno metodom \texttt{createFont()} na objektu radne knjige te potom veže uz stil metodom \texttt{setFont()} \cite{apachePOISpreadsheetQuickGuide}.
+Za razliku od rada s Word dokumentima gdje se stil veže uz \texttt{XWPFRun} objekt, u Excel modulima stil se definira kao zasebni \texttt{XSSFCellStyle} objekt koji se kreira na razini radne knjige i potom dodjeljuje pojedinim ćelijama. Jedan stil može se primijeniti na više ćelija, što je važno jer svaka radna knjiga podržava ograničen broj jedinstvenih stilova. Font se kreira odvojeno metodom \texttt{createFont()} na objektu radne knjige te potom veže uz stil metodom \texttt{setFont()} \cite{apachePOISpreadsheetQuickGuide}.
 
 Boja pozadine ćelije postavlja se kombinacijom:
 
@@ -418,7 +407,7 @@ for (int i = 0; i < stupci.length; i++) {
 list.createFreezePane(0, 1);
 \end{lstlisting}
 
-Na Slici~\ref{fig:excel_kreiran_cista} prikazan je finalni izgled datoteke u formatu \texttt{.xlsx} generirane programskim putem. Vizualni prikaz potvrđuje uspješnu primjenu stilova i formula putem Apache POI API-ja.
+Na Slici~\ref{fig:excel_kreiran_cista} prikazan je finalni izgled datoteke u formatu \texttt{.xlsx} generirane programskim putem.
 
 \begin{figure}[!ht]
     \centering
@@ -429,7 +418,7 @@ Na Slici~\ref{fig:excel_kreiran_cista} prikazan je finalni izgled datoteke u for
 
 U donjem dijelu sučelja vidljiva je kartica lista s nazivom \textit{Ocjene studenata}, koji je postavljen pri kreiranju lista metodom \texttt{createSheet()}.
 
-Središnji strukturni element je tablica s podacima o studentima. Na slici se jasno razaznaje primjena stilova:
+Središnji strukturni element je tablica s podacima o studentima. Na slici se vidi primjena stilova:
 \begin{itemize}
     \item \textbf{Zaglavlje tablice} (redak 1) istaknuto je plavom pozadinom i bijelim podebljanim tekstom, uz automatski prilagođenu širinu stupaca metodom \texttt{autoSizeColumn()}.
     \item \textbf{Tijelo tablice} koristi tehniku izmjeničnog bojanja redova (tzv. \textit{zebra striping}), što olakšava praćenje podataka u redovima.
@@ -437,7 +426,12 @@ Središnji strukturni element je tablica s podacima o studentima. Na slici se ja
 \end{itemize}
 
 \chapter{Zaključak}
-Sažetak ključnih spoznaja i smjernice za primjenu Apache POI-a.
+
+Apache POI pokazao se kao zrela i pouzdana biblioteka za programski rad s Microsoft Office formatima u Java okruženju. Kroz praktične primjere u ovom radu vidljivo je da je generiranje strukturiranih Word i Excel dokumenata izvedivo s relativno malo koda, uz punu kontrolu nad stilovima, sadržajem i formatiranjem. Najveća prednost biblioteke je platformska neovisnost, dokumenti se generiraju bez potrebe za instaliranim Microsoft Officeom, što je ključno za serverske i automatizacijske scenarije. Podrška za oba standarda, OLE2 i OOXML, osigurava kompatibilnost s dokumentima različitih generacija.
+
+Ograničenja su ipak prisutna. SXSSF streaming način rada ograničen je isključivo na pisanje, a čitanje velikih datoteka zahtijeva SAX-temeljeni pristup koji je znatno složeniji za implementaciju. HSLF i XSLF moduli za PowerPoint nemaju zajedničko sučelje, što otežava pisanje koda neovisnog o formatu. Uz to, Word dokument interno može razbiti jedan vidljivi tekst u više XWPFRun objekata, što je potrebno uzeti u obzir pri implementaciji zamjene teksta, kao što je prikazano u primjeru cirkularnog pisma.
+
+Apache POI preporučuje se za sve scenarije koji zahtijevaju automatiziranu obradu Office dokumenata u Java okruženju, od generiranja izvještaja i faktura do masovne personalizacije dokumenata u obrazovnim i poslovnim sustavima.
 
 \clearpage
 \phantomsection
