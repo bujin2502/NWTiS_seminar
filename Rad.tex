@@ -63,7 +63,7 @@
 \titulaProfesora{Prof. dr. sc.}
 
 \godina{2026}
-\mjesec{kolovoz}
+\mjesec{lipanj}
 
 \indeks{0016145097}
 
@@ -156,11 +156,84 @@ Za rad s Word dokumentima Apache POI nudi dvije implementacije. HWPF (\textit{Ho
 
 Glavna ulazna točka za rad s .docx datotekama je klasa XWPFDocument, iz koje se dohvaćaju svi elementi dokumenta. Paragrafi su dostupni kroz klasu XWPFParagraph, a svaki paragraf sastoji se od jednog ili više XWPFRun objekata koji predstavljaju tekstualne odsječke s jednakim stilskim svojstvima: fontom, veličinom, podebljavanjem, nakošenje slova i slično. Tablice se dohvaćaju kroz klasu XWPFTable, pri čemu su pojedini redovi i ćelije dostupni kroz XWPFTableRow i XWPFTableCell. Za ekstrakciju cjelokupnog teksta dokumenta u jednom koraku dostupna je klasa XWPFWordExtractor. Zaglavlja i podnožja dostupna su kroz XWPFHeader i XWPFFooter klase putem XWPFHeaderFooterPolicy objekta \cite{apacheApachePOIHWPFXWPF}.
 
-\section{PowerPoint prezentacije}
+\section{Ostale mogućnosti}
 
-Za rad s PowerPoint prezentacijama Apache POI nudi dvije implementacije. HSLF (\textit{Horrible Slide Layout Format}) pokriva stariji binarni .ppt format koji odgovara PowerPoint verzijama 97–2003, a XSLF (\textit{XML Slide Layout Format}) namijenjen je modernom .pptx formatu temeljenom na OOXML standardu. Za razliku od Excel modula koji dijele zajednički SS API, HSLF i XSLF trenutno nemaju zajedničko sučelje, što znači da kod napisan za jedan format nije izravno prenosiv na drugi \cite{apachePOIHSLFQuick}.
+Uz osnovnu podršku za Excel i Word, Apache POI 
+biblioteka nudi niz dodatnih mogućnosti koje pokrivaju specifične poslovne 
+i tehničke potrebe.
 
-Glavna ulazna točka za rad s .pptx datotekama je klasa XMLSlideShow, dok je za stariji .ppt format to HSLFSlideShow. Prezentacija se sastoji od hijerarhijske strukture: prezentacija sadržava slajdove, svaki slajd sadržava oblike (shapes), a svaki oblik može sadržavati tekstualne okvire i odlomke. Slajdovi se kreiraju metodom \texttt{createSlide()}, pri čemu je moguće odabrati željeni predložak rasporeda (\textit{slide layout}) iz dostupnih rasporeda slide mastera. Oblici poput tekstualnih okvira, slika i tablica dodaju se metodama poput \texttt{createTextBox()} i \texttt{addPicture()}. Za naprednije slučajeve korištenja, XSLFSlide objekt implementira metodu \texttt{draw()} koja omogućuje iscrtavanje cijelog slajda na Java Graphics2D objekt, što je korisno za generiranje slika ili PDF-ova iz prezentacija \cite{apachePOIHSLFQuick}.
+\subsection{PowerPoint prezentacije}
+
+Kroz XSLF API moguće je iterirati po svim oblicima na svakom slajdu i 
+ekstrahirati tekstualni sadržaj, što je korisno za indeksiranje 
+prezentacija. Metoda \texttt{draw()} klase \texttt{XSLFSlide} omogućuje 
+iscrtavanje cijelog slajda na \texttt{java.awt.Graphics2D} objekt, čime 
+je moguće generirati PNG ili JPEG slike pojedinih slajdova bez 
+instaliranog PowerPointa. Ova mogućnost koristi se u sustavima za pregled 
+prezentacija u web preglednicima, gdje je potrebno prikazati slajdove 
+bez instaliranog Microsoft Officea na poslužitelju. Uz to, XSLF API 
+podržava dodavanje slika, tablica i tekstualnih okvira na slajdove, 
+postavljanje tranzicija te upravljanje slide masterom i layoutima 
+\cite{apachePOIHSLFQuick}.
+
+\subsection{Enkripcija i dekripcija dokumenata}
+
+Apache POI podržava enkripciju i dekripciju Office dokumenata standardnim 
+OOXML mehanizmom zaštite lozinkom. Enkripcija se provodi kroz klase 
+\texttt{EncryptionInfo} i \texttt{Encryptor}, pri čemu se dokument zapisuje 
+u \texttt{POIFSFileSystem} kontejner koji je šifriran odabranim algoritmom. 
+Podržani algoritmi uključuju AES-128 i AES-256 koji se koriste u modernim 
+verzijama Microsoft Officea. Dekripcija se provodi analognim postupkom kroz 
+klasu \texttt{Decryptor} — dokument se učitava kao \texttt{POIFSFileSystem}, 
+provjerava se ispravnost lozinke i dohvaća dešifrirani tok podataka iz kojeg 
+se rekonstruira radna knjiga ili dokument \cite{apachePOIJavadoc}.
+
+\subsection{Ekstrakcija teksta}
+
+Za slučajeve kada nije potrebna puna manipulacija dokumentom nego samo 
+dohvat tekstualnog sadržaja, Apache POI nudi specijalizirane klase za 
+ekstrakciju teksta. \texttt{XWPFWordExtractor} ekstrahira sav tekst iz 
+\texttt{.docx} datoteke uključujući paragrafe, tablice i zaglavlja, 
+\texttt{XSSFExcelExtractor} radi analogno za \texttt{.xlsx} datoteke, 
+a \texttt{SlideShowExtractor} za \texttt{.pptx} prezentacije. Sve tri 
+klase implementiraju zajednički \texttt{POITextExtractor} sučelje, što 
+omogućuje uniforman pristup ekstrakciji bez obzira na format dokumenta. 
+Ekstrakcija teksta posebno je korisna u sustavima za pretraživanje i 
+indeksiranje sadržaja, kao što su Apache Lucene i Apache Solr, s kojima 
+Apache POI ima izravnu integraciju putem Apache Tika biblioteke 
+\cite{apachePOIJavadoc}.
+
+\subsection{Rad s metapodacima}
+
+Svaki Office dokument sadrži metapodatke poput naslova, autora, datuma 
+kreiranja i izmjene te ključnih riječi. Apache POI omogućuje čitanje i 
+pisanje tih metapodataka kroz \texttt{POIXMLProperties} klasu za OOXML 
+formate, koja sadrži tri podskupa svojstava: osnovna svojstva 
+(\texttt{CoreProperties}), proširena svojstva (\texttt{ExtendedProperties}) 
+i prilagođena svojstva (\texttt{CustomProperties}). Za starije OLE2 
+formate metapodaci su dostupni kroz \texttt{HPSF} komponentu 
+(\textit{Horrible Property Set Format}). Ova mogućnost korisna je u 
+sustavima za upravljanje dokumentima gdje je potrebno automatski 
+popunjavati ili čitati metapodatke bez otvaranja samog dokumenta 
+\cite{apachePOIJavadoc}.
+
+\subsection{Podrška za Outlook i Visio}
+
+Apache POI uključuje i module za formate koji su rjeđe zastupljeni u 
+tipičnim poslovnim okruženjima. \texttt{HSMF} (\textit{Horrible Stupid 
+Mail Format}) modul omogućuje čitanje Outlook \texttt{.msg} datoteka, 
+pri čemu su dostupni pošiljatelj, primatelji, predmet, tijelo poruke i 
+privici. Microsoft je 2007. godine otvorio specifikaciju ovog formata, 
+što je dodatno olakšalo razvoj pouzdane implementacije 
+\cite{apacheApachePOIComponents}.
+
+Za Visio dijagrame dostupna su dva modula: \texttt{HDGF} pokriva stariji 
+binarni \texttt{.vsd} format i podržava samo niskorazinsko čitanje i 
+ekstrakciju teksta, dok \texttt{XDGF} pokriva moderniji XML-bazirani 
+\texttt{.vsdx} format s nešto širom podrškom. Oba modula trenutno ne 
+nude API za kreiranje novih Visio dijagrama programskim putem, već su 
+usmjereni primarno na čitanje i ekstrakciju sadržaja 
+\cite{apacheApachePOIComponents}.
 
 \chapter{Praktični primjeri}
 
@@ -425,11 +498,70 @@ Središnji strukturni element je tablica s podacima o studentima. Na slici se vi
     \item \textbf{Redak s formulom} (redak 7) vizualno je odvojen gornjim rubom i podebljanim tekstom, a ćelija D7 prikazuje rezultat formule \texttt{AVERAGE(D2:D6)}, izračunati prosjek ocjena iznosi 4,2.
 \end{itemize}
 
+\subsection{Ugradnja grafa}
+
+Uz tablične podatke, Apache POI omogućuje programsko kreiranje grafova koji su izravno vezani uz ćelije lista. Graf se kreira kroz \texttt{XSSFDrawing} objekt koji predstavlja sloj za crtanje na listu, a njegova pozicija i veličina definiraju se kroz \texttt{XSSFClientAnchor} parametar koji prima koordinate u obliku indeksa stupaca i redova \cite{apachePOISpreadsheetQuickGuide}.
+
+\begin{lstlisting}[style=java, caption={Kreiranje stupčastog grafa}]
+XSSFDrawing drawing = list.createDrawingPatriarch();
+XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 8, 6, 25);
+
+XSSFChart chart = drawing.createChart(anchor);
+chart.setTitleText("Ocjene studenata");
+chart.setTitleOverlay(false);
+
+XDDFChartLegend legenda = chart.getOrAddLegend();
+legenda.setPosition(LegendPosition.BOTTOM);
+
+XDDFCategoryAxis xOs = chart.createCategoryAxis(AxisPosition.BOTTOM);
+xOs.setTitle("Student");
+XDDFValueAxis yOs = chart.createValueAxis(AxisPosition.LEFT);
+yOs.setTitle("Ocjena");
+yOs.setCrosses(AxisCrosses.AUTO_ZERO);
+
+XDDFDataSource<String> imena = XDDFDataSourcesFactory.fromStringCellRange(
+        list, new CellRangeAddress(1, 5, 0, 0));
+XDDFNumericalDataSource<Double> ocjene = XDDFDataSourcesFactory
+        .fromNumericCellRange(list, new CellRangeAddress(1, 5, 3, 3));
+
+XDDFChartData podaciGrafa = chart.createData(ChartTypes.BAR, xOs, yOs);
+podaciGrafa.setVaryColors(false);
+XDDFChartData.Series serija = podaciGrafa.addSeries(imena, ocjene);
+serija.setTitle("Ocjena", null);
+((XDDFBarChartData) podaciGrafa).setBarDirection(BarDirection.COL);
+
+chart.plot(podaciGrafa);
+\end{lstlisting}
+
+S \texttt{XDDFDataSourcesFactory.fromStringCellRange()} i \texttt{fromNumericCellRange()} metodama se definiraju izvori podataka za graf. Iste primaju referencu na list i raspon ćelija kroz \texttt{CellRangeAddress} objekt. U primjeru raspon \texttt{A2:A6} sadrži imena studenata kao kategorijsku os, a raspon \texttt{D2:D6} sadrži numeričke ocjene kao vrijednosnu os. Ključna prednost ovog pristupa je što graf nije statična slika nego živi objekt vezan uz podatke u ćelijama, pri svakom otvaranju datoteke u Excelu graf se automatski ažurira ako su se podaci promijenili.
+
+Na Slici~\ref{fig:excel_kreiran_graf_1} prikazan je finalni izgled datoteke u formatu \texttt{.xlsx} generirane programskim putem. Prikaz je preuzet s Google Sheets aplikacije, ali isti graf ispravno se prikazuje i u Microsoft Excelu. LibreOffice Calc ne renderira stupce grafa ispravno te prikazuje samo prazne osi, što je ograničenje kompatibilnosti između POI-jevog XDDF API-ja i LibreOfficeovog parsera OOXML grafova.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{slike/apache_poi_excel_izlaz_graf_google_sheet_1.png}
+    \caption{Excel dokument kreiran pomoću Apache POI biblioteke}
+    \label{fig:excel_kreiran_graf_1}
+\end{figure}
+
+Na Slici~\ref{fig:excel_kreiran_graf_2} je prikazan list dokumenta gdje se kreirao skup podataka potreban za drugi graf (Py chart).
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{slike/apache_poi_excel_izlaz_graf_google_sheet_2.png}
+    \caption{Excel dokument kreiran pomoću Apache POI biblioteke}
+    \label{fig:excel_kreiran_graf_2}
+\end{figure}
+
 \chapter{Zaključak}
 
-Apache POI pokazao se kao zrela i pouzdana biblioteka za programski rad s Microsoft Office formatima u Java okruženju. Kroz praktične primjere u ovom radu vidljivo je da je generiranje strukturiranih Word i Excel dokumenata izvedivo s relativno malo koda, uz punu kontrolu nad stilovima, sadržajem i formatiranjem. Najveća prednost biblioteke je platformska neovisnost, dokumenti se generiraju bez potrebe za instaliranim Microsoft Officeom, što je ključno za serverske i automatizacijske scenarije. Podrška za oba standarda, OLE2 i OOXML, osigurava kompatibilnost s dokumentima različitih generacija.
+Apache POI pokazao se kao pouzdana biblioteka za programski rad s Microsoft Office formatima u Java okruženju. Kroz praktične primjere u ovom radu vidljivo je kako generiranje strukturiranih Word i Excel dokumenata je izvedivo s relativno malo koda, uz punu kontrolu nad stilovima, sadržajem i formatiranjem. Najveća prednost biblioteke je platformska neovisnost, dokumenti se generiraju bez potrebe za instaliranim Microsoft Officeom, što je ključno za serverske i automatizacijske scenarije. Podrška za oba standarda, OLE2 i OOXML, osigurava kompatibilnost s dokumentima različitih generacija.
 
 Ograničenja su ipak prisutna. SXSSF streaming način rada ograničen je isključivo na pisanje, a čitanje velikih datoteka zahtijeva SAX-temeljeni pristup koji je znatno složeniji za implementaciju. HSLF i XSLF moduli za PowerPoint nemaju zajedničko sučelje, što otežava pisanje koda neovisnog o formatu. Uz to, Word dokument interno može razbiti jedan vidljivi tekst u više XWPFRun objekata, što je potrebno uzeti u obzir pri implementaciji zamjene teksta, kao što je prikazano u primjeru cirkularnog pisma.
+
+Najveći izazov pri radu s Apache POI bibliotekom bio je upravo problem razbijanja teksta na više XWPFRun objekata, što se pokazalo tek pri testiranju cirkularnog pisma kada zamjena placeholdera jednostavno nije radila kako je očekivano. Tek nakon što sam metodom pokušaja i pogreške shvatio da Word interno ne čuva tekst onako kako ga vidimo, nego ga dijeli na segmente koji ovise o formatiranju i internim optimizacijama, rješenje je postalo jasno. Taj detalj nije nigdje eksplicitno naglašen u službenoj dokumentaciji pa je traženje uzroka oduzelo više vremena nego sama implementacija. S druge strane, generiranje Excel izvještaja s formulama i stilovima teklo je glatko, što sugerira kako je Excel podrška u POI-u zrelija i bolje dokumentirana od Word podrške.
+
+Važno je napomenuti kako postoji ograničenje vezano uz kompatibilnost XDDF grafova s LibreOffice Calc aplikacijom. Iako je generirani XML graf ispravan i u potpunosti u skladu s OOXML standardom, što je potvrđeno pregledom internog XML sadržaja putem \texttt{getCTChart().xmlText()} metode, LibreOffice ne renderira stupce grafa ispravno te prikazuje samo prazne osi. Isti graf ispravno se prikazuje u Microsoft Excelu i Google Sheetsu. Ovaj problem je nekompatibilnost između POI-jevog XDDF API-ja i LibreOfficeovog parsera OOXML grafova te nije uzrokovan greškom u kodu. Za produkcijska okruženja koja zahtijevaju prikaz u LibreOfficeu, preporučuje se zaobilaženje XDDF API-ja i direktno upisivanje XML strukture grafa kroz \texttt{getCTChartSpace().set()} metodu.
 
 Apache POI preporučuje se za sve scenarije koji zahtijevaju automatiziranu obradu Office dokumenata u Java okruženju, od generiranja izvještaja i faktura do masovne personalizacije dokumenata u obrazovnim i poslovnim sustavima.
 
@@ -532,6 +664,188 @@ public class CirkularnoPismo {
                 paragraf.getRuns().get(i).setText("", 0);
             }
         }
+    }
+}
+\end{lstlisting}
+
+\section*{Excel izvještaj}
+\label{excel-izvjestaj}
+
+\begin{lstlisting}[style=Java, caption=Excel izvještaj]
+package com.zpracic.excel;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
+
+import org.apache.poi.xddf.usermodel.chart.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFChart;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
+
+public class Excel {
+
+    public static void main(String[] args) throws IOException {
+
+        XSSFWorkbook radnaKnjiga = new XSSFWorkbook();
+        // Dodavanje novog lista (sheet-a) u radnu knjigu
+        XSSFSheet list = radnaKnjiga.createSheet("Ocjene studenata");
+
+        XSSFCellStyle stilZaglavlja = radnaKnjiga.createCellStyle();
+        stilZaglavlja.setFillForegroundColor(new XSSFColor(
+                new java.awt.Color(46, 117, 182), new DefaultIndexedColorMap()));
+        stilZaglavlja.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        stilZaglavlja.setAlignment(HorizontalAlignment.CENTER);
+        stilZaglavlja.setBorderBottom(BorderStyle.THIN);
+        XSSFFont fontZaglavlja = radnaKnjiga.createFont();
+        fontZaglavlja.setBold(true);
+        fontZaglavlja.setColor(new XSSFColor(
+                new java.awt.Color(255, 255, 255), new DefaultIndexedColorMap()));
+        fontZaglavlja.setFontHeightInPoints((short) 11);
+        stilZaglavlja.setFont(fontZaglavlja);
+
+        XSSFCellStyle stilParni = radnaKnjiga.createCellStyle();
+        stilParni.setAlignment(HorizontalAlignment.CENTER);
+
+        XSSFCellStyle stilNeparni = radnaKnjiga.createCellStyle();
+        stilNeparni.setFillForegroundColor(new XSSFColor(
+                new java.awt.Color(222, 234, 246), new DefaultIndexedColorMap()));
+        stilNeparni.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        stilNeparni.setAlignment(HorizontalAlignment.CENTER);
+
+        XSSFCellStyle stilZbroj = radnaKnjiga.createCellStyle();
+        stilZbroj.setAlignment(HorizontalAlignment.CENTER);
+        stilZbroj.setBorderTop(BorderStyle.MEDIUM);
+        XSSFFont fontZbroj = radnaKnjiga.createFont();
+        fontZbroj.setBold(true);
+        stilZbroj.setFont(fontZbroj);
+
+
+        String[] stupci = {"Ime i prezime", "JMBAG", "Kolegij",
+                           "Ocjena (broj)", "Ocjena (opis)"};
+        Row redZaglavlja = list.createRow(0);
+        for (int i = 0; i < stupci.length; i++) {
+            Cell celija = redZaglavlja.createCell(i);
+            celija.setCellValue(stupci[i]);
+            celija.setCellStyle(stilZaglavlja);
+        }
+
+        String[][] podaci = {
+            {"Pero Kos",     "0123456789", "Napredne WEB tehnologije", "5", "Izvrstan"},
+            {"Franjo Kovac", "0123456790", "Napredne WEB tehnologije", "4", "Vrlo dobar"},
+            {"Maja Peric",   "0123456791", "Napredne WEB tehnologije", "5", "Izvrstan"},
+            {"Luka Novak",   "0123456792", "Napredne WEB tehnologije", "3", "Dobar"},
+            {"Sara Babic",   "0123456793", "Napredne WEB tehnologije", "4", "Vrlo dobar"},
+        };
+
+        for (int i = 0; i < podaci.length; i++) {
+            Row red = list.createRow(i + 1);
+            XSSFCellStyle stil = (i % 2 == 0) ? stilParni : stilNeparni;
+            for (int j = 0; j < podaci[i].length; j++) {
+                Cell celija = red.createCell(j);
+                if (j == 3) {
+                    celija.setCellValue(Double.parseDouble(podaci[i][j]));
+                } else {
+                    celija.setCellValue(podaci[i][j]);
+                }
+                celija.setCellStyle(stil);
+            }
+        }
+
+        int zadnjiRed = podaci.length + 1;
+        Row redFormule = list.createRow(zadnjiRed);
+
+        Cell celijaOznaka = redFormule.createCell(2);
+        celijaOznaka.setCellValue("Prosjek ocjena:");
+        celijaOznaka.setCellStyle(stilZbroj);
+
+        Cell celijaFormula = redFormule.createCell(3);
+        celijaFormula.setCellFormula("AVERAGE(D2:D6)");
+        celijaFormula.setCellStyle(stilZbroj);
+
+        for (int i = 0; i < stupci.length; i++) {
+            list.autoSizeColumn(i);
+        }
+        list.createFreezePane(0, 1);
+
+        XSSFFormulaEvaluator evaluator = radnaKnjiga.getCreationHelper()
+                .createFormulaEvaluator();
+        evaluator.evaluateAll();
+
+
+        XSSFDrawing drawing = list.createDrawingPatriarch();
+        XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 8, 6, 25);
+
+        XSSFChart chart = drawing.createChart(anchor);
+        chart.setTitleText("Ocjene studenata");
+        chart.setTitleOverlay(false);
+
+        XDDFChartLegend legenda = chart.getOrAddLegend();
+        legenda.setPosition(LegendPosition.BOTTOM);
+
+        XDDFCategoryAxis xOs = chart.createCategoryAxis(AxisPosition.BOTTOM);
+        xOs.setTitle("Student");
+        XDDFValueAxis yOs = chart.createValueAxis(AxisPosition.LEFT);
+        yOs.setTitle("Ocjena");
+        yOs.setCrosses(AxisCrosses.AUTO_ZERO);
+
+        XDDFDataSource<String> imena = XDDFDataSourcesFactory.fromStringCellRange(list,
+                CellRangeAddress.valueOf("A2:A6"));
+
+        XDDFNumericalDataSource<Double> ocjene = XDDFDataSourcesFactory
+                .fromNumericCellRange(list, CellRangeAddress.valueOf("D2:D6"));
+
+        XDDFChartData podaciGrafa = chart.createData(ChartTypes.BAR, xOs, yOs);
+        podaciGrafa.setVaryColors(true); // Svaki stupac dobiva drugačiju boju
+
+        XDDFChartData.Series serija = podaciGrafa.addSeries(imena, ocjene);
+        serija.setTitle("Ocjena", null);
+
+        ((XDDFBarChartData) podaciGrafa).setBarDirection(BarDirection.COL);
+
+        chart.plot(podaciGrafa);
+        
+        XSSFDrawing drawingPie = list.createDrawingPatriarch();
+        XSSFClientAnchor anchorPie = drawingPie.createAnchor(0, 0, 0, 0, 7, 8, 13, 25);
+
+        XSSFChart pieChart = drawingPie.createChart(anchorPie);
+        pieChart.setTitleText("Raspodjela ocjena (%)");
+        pieChart.setTitleOverlay(false);
+
+        XDDFChartLegend legendaPie = pieChart.getOrAddLegend();
+        legendaPie.setPosition(LegendPosition.BOTTOM);
+
+        XSSFSheet pomocniList = radnaKnjiga.createSheet("Podaci grafa");
+
+        String[] ocjeneOpis = {"Dobar (3)", "Vrlo dobar (4)", "Izvrstan (5)"};
+        double[] brojevi = {1, 2, 2}; // 1x ocjena 3, 2x ocjena 4, 2x ocjena 5
+
+        for (int i = 0; i < ocjeneOpis.length; i++) {
+            Row r = pomocniList.createRow(i);
+            r.createCell(0).setCellValue(ocjeneOpis[i]);
+            r.createCell(1).setCellValue(brojevi[i]);
+        }
+
+        XDDFDataSource<String> kategorije = XDDFDataSourcesFactory.fromStringCellRange(
+                pomocniList, CellRangeAddress.valueOf("A1:A3"));
+        XDDFNumericalDataSource<Double> vrijednosti = XDDFDataSourcesFactory
+                .fromNumericCellRange(pomocniList, CellRangeAddress.valueOf("B1:B3"));
+
+        XDDFChartData pieData = pieChart.createData(ChartTypes.PIE, null, null);
+        pieData.setVaryColors(true);
+        pieData.addSeries(kategorije, vrijednosti);
+
+        pieChart.plot(pieData);
+        
+        try (FileOutputStream out = new FileOutputStream(
+                "src/main/java/com/zpracic/excel/ocjene.xlsx")) {
+            radnaKnjiga.write(out);
+        }
+        radnaKnjiga.close();
+        System.out.println("Excel datoteka uspjesno kreirana: ocjene.xlsx");
     }
 }
 \end{lstlisting}
