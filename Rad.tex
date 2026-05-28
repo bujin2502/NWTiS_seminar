@@ -70,9 +70,9 @@
 \smjer{Baze podataka i baze znanja}
 
 
-\sazetak{Apache POI je Java biblioteka otvorenog koda koju razvija Apache Software Foundation, a namijenjena je programskom čitanju, pisanju i izmjeni Microsoft Office dokumenata bez potrebe za instaliranim Microsoft Officeom. Biblioteka podržava kako starije binarne formate temeljene na OLE2 standardu (XLS, DOC, PPT), tako i moderne OOXML formate uvedene s Microsoft Officeom 2007 (XLSX, DOCX, PPTX). Rad prikazuje arhitekturu projekta i njegove ključne module, HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF i XSLF, te demonstrira praktičnu primjenu na konkretnim primjerima. Prvi primjer prikazuje programsko kreiranje Word dokumenta s tablicom podataka o studentima, uključujući stilizaciju zaglavlja i izmjenično bojanje redova, kao i tehniku cirkularnog pisma za masovnu personalizaciju dokumenata pomoću predloška i CSV izvora podataka. Drugi primjer prikazuje generiranje Excel izvještaja s primjenom stilova, ugrađenih formula, automatskog prilagođavanja širine stupaca te programskog kreiranja stupčastog grafa vezanih uz podatke u ćelijama. Zaključno se razmatraju prednosti i ograničenja biblioteke, uključujući problem kompatibilnosti XDDF grafova s LibreOffice Calc aplikacijom.}
+\sazetak{Apache POI je Java biblioteka otvorenog koda za programsko čitanje, pisanje i izmjenu Microsoft Office dokumenata bez instaliranog Microsoft Officea. Rad prikazuje arhitekturu projekta, ključne module za rad s Excel (HSSF/XSSF/SXSSF), Word (HWPF/XWPF) i PowerPoint (HSLF/XSLF) formatima te praktičnu primjenu kroz dva primjera. Demonstrirano je generiranje stiliziranog Word dokumenta s tablicom i tehnikom cirkularnog pisma, te Excel izvještaja s formulama, automatskim formatiranjem i ugradenim grafom. Identificirana su i ključna ograničenja: fragmentacija XWPFRun objekata pri radu s predlošcima te nekompatibilnost XDDF grafova s LibreOffice Calcom.}
 
-\kljucneRijeci{Apache POI; Java; Microsoft Office; OOXML; Excel; Word; cirkularno pismo; grafovi; automatizacija; Maven}
+\kljucneRijeci{Apache POI; Java; Microsoft Office; OOXML; automatizacija dokumenata}
 
 \begin{document}
 
@@ -505,7 +505,7 @@ Ograničenja su ipak prisutna. SXSSF streaming način rada ograničen je isklju�
 
 Zasebno ograničenje tiče se kompatibilnosti XDDF grafova s LibreOffice Calc aplikacijom. Iako je generirani XML graf u potpunosti u skladu s OOXML standardom, što je potvrđeno pregledom internog XML sadržaja putem \texttt{getCTChart().xmlText()} metode, LibreOffice ne renderira stupce grafa ispravno te prikazuje samo prazne osi. Isti graf ispravno se prikazuje u Microsoft Excelu i Google Sheetsu. Za produkcijska okruženja koja zahtijevaju prikaz u LibreOfficeu preporučuje se direktno upisivanje XML strukture grafa kroz \texttt{getCTChartSpace().set()} metodu, zaobilazeći XDDF API.
 
-Apache POI preporučuje se za sve scenarije koji zahtijevaju automatiziranu obradu Office dokumenata u Java okruženju, od generiranja izvještaja i faktura do masovne personalizacije dokumenata u obrazovnim i poslovnim sustavima. Osobno iskustvo rada s bibliotekom ostavilo je mješovit dojam: brzina kojom se dolazi do funkcionalnog rezultata zaista je impresivna, no dokumentacija nije uvijek na razini zrelosti same biblioteke. Unatoč tome, s obzirom na opsežnost funkcionalnosti i široku primjenu, Apache POI ostaje nezaobilazan alat za Java programere koji trebaju raditi s Microsoft Office formatima.
+Apache POI preporučuje se za sve scenarije koji zahtijevaju automatiziranu obradu Office dokumenata u Java okruženju, od generiranja izvještaja i faktura do masovne personalizacije dokumenata. Biblioteka pokazuje zrelost na razini API-ja, no dokumentacija na pojedinim mjestima zaostaje za složenošću projekta, što produljuje krivulju učenja.
 
 \clearpage
 \phantomsection
