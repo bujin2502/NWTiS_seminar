@@ -70,7 +70,7 @@
 \smjer{Baze podataka i baze znanja}
 
 
-\sazetak{Apache POI je Java biblioteka otvorenog koda koju razvija Apache Software Foundation, a namijenjena je programskom čitanju, pisanju i izmjeni Microsoft Office dokumenata bez potrebe za instaliranim Microsoft Officeom. Biblioteka podržava kako starije binarne formate temeljene na OLE2 standardu (XLS, DOC, PPT), tako i moderne OOXML formate uvedene s Microsoft Officeom 2007 (XLSX, DOCX, PPTX). Rad prikazuje arhitekturu projekta i njegove ključne module, HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF i XSLF, te demonstrira praktičnu primjenu na konkretnim primjerima. Prvi primjer prikazuje programsko kreiranje Word dokumenta s tablicom podataka o studentima, uključujući stilizaciju zaglavlja i izmjenično bojanje redova, kao i tehniku cirkularnog pisma za masovnu personalizaciju dokumenata pomoću predloška i CSV izvora podataka. Drugi primjer prikazuje generiranje Excel izvještaja s primjenom stilova, ugrađenih formula, automatskog prilagođavanja širine stupaca te programskog kreiranja stupčastog i tortnog grafa vezanih uz podatke u ćelijama. Zaključno se razmatraju prednosti i ograničenja biblioteke, uključujući problem kompatibilnosti XDDF grafova s LibreOffice Calc aplikacijom.}
+\sazetak{Apache POI je Java biblioteka otvorenog koda koju razvija Apache Software Foundation, a namijenjena je programskom čitanju, pisanju i izmjeni Microsoft Office dokumenata bez potrebe za instaliranim Microsoft Officeom. Biblioteka podržava kako starije binarne formate temeljene na OLE2 standardu (XLS, DOC, PPT), tako i moderne OOXML formate uvedene s Microsoft Officeom 2007 (XLSX, DOCX, PPTX). Rad prikazuje arhitekturu projekta i njegove ključne module, HSSF, XSSF, SXSSF, HWPF, XWPF, HSLF i XSLF, te demonstrira praktičnu primjenu na konkretnim primjerima. Prvi primjer prikazuje programsko kreiranje Word dokumenta s tablicom podataka o studentima, uključujući stilizaciju zaglavlja i izmjenično bojanje redova, kao i tehniku cirkularnog pisma za masovnu personalizaciju dokumenata pomoću predloška i CSV izvora podataka. Drugi primjer prikazuje generiranje Excel izvještaja s primjenom stilova, ugrađenih formula, automatskog prilagođavanja širine stupaca te programskog kreiranja stupčastog grafa vezanih uz podatke u ćelijama. Zaključno se razmatraju prednosti i ograničenja biblioteke, uključujući problem kompatibilnosti XDDF grafova s LibreOffice Calc aplikacijom.}
 
 \kljucneRijeci{Apache POI; Java; Microsoft Office; OOXML; Excel; Word; cirkularno pismo; grafovi; automatizacija; Maven}
 
@@ -497,16 +497,6 @@ Na Slici~\ref{fig:excel_kreiran_graf_1} prikazan je finalni izgled datoteke u fo
     \label{fig:excel_kreiran_graf_1}
 \end{figure}
 
-Na Slici~\ref{fig:excel_kreiran_graf_2} je prikazan list dokumenta gdje se kreirao skup podataka potreban za drugi graf (Pie chart).
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.80\textwidth]{slike/apache_poi_excel_izlaz_graf_google_sheet_2.png}
-    \caption{Excel dokument kreiran pomoću Apache POI biblioteke. \\
-    \small Izvor: vlastita izrada}
-    \label{fig:excel_kreiran_graf_2}
-\end{figure}
-
 \chapter{Zaključak}
 
 Apache POI pokazao se kao pouzdana biblioteka za programski rad s Microsoft Office formatima u Java okruženju. Kroz praktične primjere vidljivo je kako se strukturirani Word i Excel dokumenti mogu generirati s relativno malo koda, uz punu kontrolu nad stilovima, sadržajem i formatiranjem. Najveća prednost biblioteke je platformska neovisnost jer se dokumenti generiraju bez potrebe za instaliranim Microsoft Officeom, što je ključno za serverske i automatizacijske scenarije. Podrška za oba standarda, OLE2 i OOXML, osigurava kompatibilnost s dokumentima različitih generacija.
@@ -515,7 +505,7 @@ Ograničenja su ipak prisutna. SXSSF streaming način rada ograničen je isklju�
 
 Zasebno ograničenje tiče se kompatibilnosti XDDF grafova s LibreOffice Calc aplikacijom. Iako je generirani XML graf u potpunosti u skladu s OOXML standardom, što je potvrđeno pregledom internog XML sadržaja putem \texttt{getCTChart().xmlText()} metode, LibreOffice ne renderira stupce grafa ispravno te prikazuje samo prazne osi. Isti graf ispravno se prikazuje u Microsoft Excelu i Google Sheetsu. Za produkcijska okruženja koja zahtijevaju prikaz u LibreOfficeu preporučuje se direktno upisivanje XML strukture grafa kroz \texttt{getCTChartSpace().set()} metodu, zaobilazeći XDDF API.
 
-Apache POI preporučuje se za sve scenarije koji zahtijevaju automatiziranu obradu Office dokumenata u Java okruženju, od generiranja izvještaja i faktura do masovne personalizacije dokumenata u obrazovnim i poslovnim sustavima. Osobno iskustvo rada s bibliotekom ostavilo je mješovit dojam: brzina kojom se dolazi do funkcionalnog rezultata zaista je impresivna, no dokumentacija nije uvijek na razini zrelosti same biblioteke. Ta razlika između Excel i Word modula, gdje je prvi intuitivan i dobro pokriven primjerima, a drugi zahtijeva više eksperimentiranja, dobra je mjera za očekivanja u budućim projektima.
+Apache POI preporučuje se za sve scenarije koji zahtijevaju automatiziranu obradu Office dokumenata u Java okruženju, od generiranja izvještaja i faktura do masovne personalizacije dokumenata u obrazovnim i poslovnim sustavima. Osobno iskustvo rada s bibliotekom ostavilo je mješovit dojam: brzina kojom se dolazi do funkcionalnog rezultata zaista je impresivna, no dokumentacija nije uvijek na razini zrelosti same biblioteke. Unatoč tome, s obzirom na opsežnost funkcionalnosti i široku primjenu, Apache POI ostaje nezaobilazan alat za Java programere koji trebaju raditi s Microsoft Office formatima.
 
 \clearpage
 \phantomsection
@@ -759,38 +749,6 @@ public class Excel {
         ((XDDFBarChartData) podaciGrafa).setBarDirection(BarDirection.COL);
 
         chart.plot(podaciGrafa);
-        
-        XSSFDrawing drawingPie = list.createDrawingPatriarch();
-        XSSFClientAnchor anchorPie = drawingPie.createAnchor(0, 0, 0, 0, 7, 8, 13, 25);
-
-        XSSFChart pieChart = drawingPie.createChart(anchorPie);
-        pieChart.setTitleText("Raspodjela ocjena (%)");
-        pieChart.setTitleOverlay(false);
-
-        XDDFChartLegend legendaPie = pieChart.getOrAddLegend();
-        legendaPie.setPosition(LegendPosition.BOTTOM);
-
-        XSSFSheet pomocniList = radnaKnjiga.createSheet("Podaci grafa");
-
-        String[] ocjeneOpis = {"Dobar (3)", "Vrlo dobar (4)", "Izvrstan (5)"};
-        double[] brojevi = {1, 2, 2}; // 1x ocjena 3, 2x ocjena 4, 2x ocjena 5
-
-        for (int i = 0; i < ocjeneOpis.length; i++) {
-            Row r = pomocniList.createRow(i);
-            r.createCell(0).setCellValue(ocjeneOpis[i]);
-            r.createCell(1).setCellValue(brojevi[i]);
-        }
-
-        XDDFDataSource<String> kategorije = XDDFDataSourcesFactory.fromStringCellRange(
-                pomocniList, CellRangeAddress.valueOf("A1:A3"));
-        XDDFNumericalDataSource<Double> vrijednosti = XDDFDataSourcesFactory
-                .fromNumericCellRange(pomocniList, CellRangeAddress.valueOf("B1:B3"));
-
-        XDDFChartData pieData = pieChart.createData(ChartTypes.PIE, null, null);
-        pieData.setVaryColors(true);
-        pieData.addSeries(kategorije, vrijednosti);
-
-        pieChart.plot(pieData);
         
         try (FileOutputStream out = new FileOutputStream(
                 "src/main/java/com/zpracic/excel/ocjene.xlsx")) {
