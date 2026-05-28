@@ -15,5 +15,6 @@
 \contentsline {lstlisting}{\numberline {11}{\ignorespaces Automatska širina i zamrzavanje zaglavlja}}{14}{lstlisting.11}%
 \contentsline {lstlisting}{\numberline {12}{\ignorespaces Kreiranje stupčastog grafa}}{15}{lstlisting.12}%
 \addvspace {10\p@ }
-\contentsline {lstlisting}{\numberline {13}{\ignorespaces Cirkularno pismo}}{23}{lstlisting.13}%
-\contentsline {lstlisting}{\numberline {14}{\ignorespaces Excel izvještaj}}{25}{lstlisting.14}%
+\contentsline {lstlisting}{\numberline {13}{\ignorespaces Kreiranje word dokument}}{23}{lstlisting.13}%
+\contentsline {lstlisting}{\numberline {14}{\ignorespaces Cirkularno pismo}}{26}{lstlisting.14}%
+\contentsline {lstlisting}{\numberline {15}{\ignorespaces Excel izvještaj}}{27}{lstlisting.15}%
